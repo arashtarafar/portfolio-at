@@ -1,0 +1,8 @@
+.hero{
+    min-height: 0;
+    background-image: none;
+    background-color: var(--background-color);
+}
+.topbar{
+    margin-bottom: 0;
+}

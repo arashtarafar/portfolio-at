@@ -1,0 +1,534 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald&family=Oxygen:wght@300&display=swap');
+
+:root{
+    scroll-behavior: smooth;
+
+    --background-color: #e6e6e6;
+    --background-color-darker: #dddddd;
+    --general-text-color: #696969;
+    --hero-title-color: #a1a1a1;
+    --section-title-color: #7b7b7b;
+    --item-name-color: #777777;
+    --item-date-color: #acacac;
+    --bodytext-color: #878787;
+    --link-color: #8d8dd0;
+    --link-color-hover: #7171a8;
+    --floating-element-shadow: #b0b0b0;
+}
+
+:root.dark{
+    --background-color: #272727;
+    --background-color-darker: #1a1a1a;
+    --general-text-color: #acacac;
+    --hero-title-color: #979797;
+    --section-title-color: #bbbbbb;
+    --item-name-color: #b9b9b9;
+    --item-date-color: #828282;
+    --bodytext-color: #9c9c9c;
+    --link-color: #adadff;
+    --link-color-hover: #8c8ccf;
+    --floating-element-shadow: #121212;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+/*
+
+Codes to hide the scrollbar while allowing functionality taken from:
+
+https://www.educative.io/answers/how-to-hide-scrollbar-in-html-while-still-being-able-to-scroll
+
+*/
+
+body{
+    font-family: sans-serif;
+    font-size: 18px;
+    background-color: var(--background-color);
+    color: var(--general-text-color);
+    overflow-y: scroll; /* Adding the ability to scroll */
+}
+
+/* Hiding scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hiding scrollbar for IE, Edge and Firefox */
+body {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.hero{
+    min-height: 100vh;
+    background-image: linear-gradient(135deg, #000000, #742c83);
+}
+
+.topbar, .menu{
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    box-shadow: none;
+}
+
+.topbar{
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: 10rem;
+    transition: 0.3s;
+}
+
+.topbar.sticky{
+    background-color: rgba(20, 20, 20, 0.95);
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 32px 0;
+    box-shadow: 1px 0 15px #121212;
+}
+
+.darkmode-toggle{
+    cursor: pointer;
+    margin-right: 3rem;
+}
+
+.toggle-icon{
+    font-size: 175%;
+    color: #aeaeae;
+}
+
+.menu{
+    margin-right: 7rem;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.menu.collapsed{
+    display: block;
+}
+
+.menu-link{
+    display: inline-block;
+    margin-left: 7rem;
+}
+
+.menu-link a:link,
+.menu-link a:visited{
+    text-decoration: none;
+    color: #aeaeae;
+    transition: 0.3s;
+}
+
+.menu-link a:hover,
+.menu-link a:active{
+    color: #8e8e8e;
+}
+
+.menu-mobile{
+    display: none;
+    margin-left: 3rem;
+    padding-top: 0.5rem;
+    color: #aeaeae;
+    cursor: pointer;
+}
+
+.menu-mobile:hover{
+    color: #8e8e8e;
+}
+
+.hero h1{
+    font-family: 'Oxygen', sans-serif;
+    color: var(--hero-title-color);
+    font-size: 2rem;
+    padding-left: 15%;
+    padding-top: 5rem;
+    line-height: 125%;
+}
+
+.portrait{
+    width: 256px;
+    border-radius: 50%;
+    margin-bottom: 2rem;
+}
+
+.herocontacts > p{
+    margin-bottom: 1rem;
+    font-family: 'Oxygen', sans-serif;
+    color: rgb(164, 164, 164);
+}
+
+.herocontacts .phone{
+    color: #adadff;
+}
+
+.linkedin:link,
+.linkedin:visited{
+    text-decoration: none;
+    color: #adadff;
+    transition: 0.3s;
+}
+
+.linkedin:hover,
+.linkedin:active{
+    color: #9e9ee8;
+}
+
+.anchor{
+    display: block;
+    position: relative;
+    top: -100px;
+    visibility: hidden;
+}
+
+section{
+    padding: 4rem 0;
+    transition: 0.3s;
+}
+
+section h2{
+    font-family: 'Oxygen', sans-serif;
+    color: var(--section-title-color);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    line-height: 145%;
+}
+
+.service{
+    padding: 3rem;
+    text-align: center;
+}
+
+.service-icon{
+    display: inline-block;
+    font-size: 200%;
+    margin-bottom: 2rem;
+    color: var(--section-title-color);
+}
+
+.service h3{
+    font-family: 'Oswald', sans-serif;
+    margin-bottom: 2.5rem;
+    font-size: 120%;
+    color: var(--item-name-color);
+}
+
+.service p{
+    text-align: left;
+    font-family: 'Oxygen', sans-serif;
+    width: 90%;
+    padding-left: 15%;
+    color: var(--bodytext-color);
+    line-height: 125%;
+}
+
+.section-experiences{
+    background-color: var(--background-color-darker);
+}
+
+.section-experiences > div{
+    padding-left: 6rem;
+    padding-right: 6rem;
+}
+
+.experience{
+    width: 80%;
+}
+
+.experience-name{
+    font-family: 'Oswald', sans-serif;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--item-name-color);
+    line-height: 125%;
+}
+
+.experience-date{
+    margin-bottom: 1rem;
+    color: var(--item-date-color);
+}
+
+.experience-description{
+    font-family: 'Oxygen', sans-serif;
+    width: 80%;
+    color: var(--bodytext-color);
+    line-height: 125%;
+}
+
+.section-projects{
+    padding-left: 4rem;
+    padding-right: 4rem;
+    /* background-image: linear-gradient(90deg, #161516, #31316a); */
+    background-color: var(--background-color-darker);
+}
+
+.project-field h3{
+    font-family: 'Oswald', sans-serif;
+    font-size: 150%;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+    color: var(--item-name-color);
+}
+
+.project{
+    padding: 3rem;
+    text-align: center;
+}
+
+.project img{
+    border-radius: 2px;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.project-name{
+    font-family: 'Oswald', sans-serif;
+    margin-bottom: 0.5rem;
+    color: var(--item-name-color);
+}
+
+.project-link:link,
+.project-link:visited{
+    font-family: 'Oxygen', sans-serif;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--link-color);
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.project-link:hover,
+.project-link:active{
+    color: var(--link-color-hover);
+}
+
+.project-description{
+    text-align: left;
+    font-family: 'Oxygen', sans-serif;
+    color: var(--bodytext-color);
+    line-height: 125%;
+}
+
+.section-skills{
+    background-color: var(--background-color-darker);
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+
+.section-skills h3{
+    font-family: 'Anton', sans-serif;
+    color: var(--item-name-color);
+    font-size: 150%;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+.section-skills ul{
+    padding-left: 2%;
+}
+
+.section-skills ul li{
+    margin-bottom: 1rem;
+    font-family: 'Oxygen', sans-serif;
+    color: var(--bodytext-color);
+}
+
+.language-name{
+    font-family: 'Oswald', sans-serif;
+    margin-bottom: 0.5rem;
+    color: var(--item-name-color);
+}
+
+.language-proficiency{
+    font-family: 'Oxygen', sans-serif;
+    margin-bottom: 2rem;
+    color: var(--bodytext-color);
+}
+
+.section-education{
+    background-color: var(--background-color-darker);
+}
+
+.section-education > div{
+    margin-top: 5rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
+}
+
+.education{
+    width: 80%;
+    margin-top: 2rem;
+}
+
+.education-name{
+    font-family: 'Oswald', sans-serif;
+    margin-bottom: 0.5rem;
+    color: var(--item-name-color);
+    line-height: 125%;
+}
+
+.education-date{
+    margin-bottom: 1rem;
+    color: var(--item-date-color);
+}
+
+.education-description{
+    font-family: 'Oxygen', sans-serif;
+    color: var(--bodytext-color);
+    line-height: 125%;
+}
+
+footer{
+    background-color: var(--background-color);
+    font-family: 'Oxygen', sans-serif;
+    padding: 4rem;
+    transition: 0.3s;
+}
+
+.contacts{
+    margin-bottom: 5rem;
+    padding-left: 5rem;
+}
+
+.contacts span{
+    display: inline-block;
+    margin-right: 2rem;
+}
+
+.contacts .phone{
+    color: #7171a8;
+}
+
+.contacts .linkedin:link,
+.contacts .linkedin:visited{
+    color: #7171a8;
+}
+
+.contacts .linkedin:hover,
+.contacts .linkedin:active{
+    color: #666699;
+}
+
+.copyright{
+    text-align: center;
+    font-size: 80%;
+}
+
+.backtotop:link,
+.backtotop:visited{
+    display: none;
+    position: fixed;
+    right: 5%;
+    bottom: 5%;
+    background-color: var(--background-color);
+    box-shadow: 1px 0 15px var(--floating-element-shadow);
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    padding-top: 7px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 200%;
+    color: var(--general-text-color);
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.backtotop:hover,
+.backtotop:active{
+    background-color: var(--background-color-darker);
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 960px){
+    .menu{
+        margin-right: 3rem;
+    }
+    .menu-link{
+        margin-left: 3rem;
+    }
+    .service p{
+        width: 100%;
+    }
+    .experience-description{
+        width: 100%;
+    }
+    .contacts .prompt{
+        display: block;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+}
+@media only screen and (max-width: 840px){
+    .service p{
+        width: 90%;
+    }
+    .experience{
+        width: 90%;
+    }
+    .heroright{
+        padding-left: 15%;
+        margin-top: 5rem;
+    }
+    .portrait{
+        width: 100px;
+        border-radius: 0;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    .hero{
+        justify-content: flex-start;
+    }
+    .menu{
+        display: none;
+        margin-right: 0;
+    }
+    .menu-link{
+        margin-bottom: 1rem;
+    }
+    .menu-mobile{
+        display: block;
+    }
+    .topbar{
+        justify-content: space-between;
+        margin-bottom: 3rem;
+    }
+    .hero h1{
+        padding-top: 7%;
+    }
+    .service{
+        padding: 3rem 0;
+    }
+    .section-experiences > div{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .experience{
+        width: 100%;
+    }
+    .project{
+        padding: 3rem 0;
+    }
+    .section-education > div{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .education{
+        width: 100%;
+    }
+    .contacts{
+        padding-left: 2.5rem;
+    }
+    .contacts .phone,
+    .contacts .email,
+    .contacts .linkedin{
+        display: block;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+}

@@ -34,24 +34,17 @@
         <a class="anchor" id="education"></a>
         <section class="container section-education">
             <h2>MY EDUCATION</h2>
-            <div class="education columns">
-                <div class="col-8 col-md-12">
-                    <p class="education-name">Bachelor of Applied Science in Graphic Design and Web Development | Jönköping University</p>
-                    <p class="education-date">June 2025 (Current Student)</p>
+            {{#each educations}}
+                <div class="education columns">
+                    <div class="col-8 col-md-12">
+                        <p class="education-name">{{ educationDegree }} | {{ organizationName }}</p>
+                        <p class="education-date">{{ educationDate }}</p>
+                    </div>
+                    <div class="col-4 col-md-12">
+                        <p class="education-description">{{ educationDescription }}</p>
+                    </div>
                 </div>
-                <div class="col-4 col-md-12">
-                    <p class="education-description">During my studies, I am learning a great deal about graphic design, UI/UX, and communication.</p>
-                </div>
-            </div>
-            <div class="education columns">
-                <div class="col-8 col-md-12">
-                    <p class="education-name">Bachelor of Applied Science in Computer Engineering | Amirkabir University of Technology</p>
-                    <p class="education-date">June 2017</p>
-                </div>
-                <div class="col-4 col-md-12">
-                    <p class="education-description">Here, I learned most of what I know about computers, programming, and logical thinking</p>
-                </div>
-            </div>
+            {{/each}}
         </section>
     </main>
     <footer class="container">

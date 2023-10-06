@@ -6,7 +6,152 @@ const port = 8080;
 const sqlite3 = require("sqlite3");
 const db = new sqlite3.Database("portfolio-at.db");
 
-//////////////////////////////////////////////// DATABASE STUFF
+//////////////////////////////////////////////////////////////////// DATABASE STUFF
+
+//////////////////////////////////////////////// ORGANIZATIONS TABLE
+db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organizationName TEXT NOT NULL, organizationIndustry TEXT NOT NULL)", (error) => {
+    if (error) {
+        // tests error: display error
+        console.log("ERROR: ", error);
+    } else {
+        // tests error: no error, the table has been created
+        console.log("---> Table organizations created!")
+        const organizations = [
+            { 
+                "id":"1",
+                "name":"Amirkabir University of Technology", 
+                "industry":"education",
+            },
+            {   
+                "id":"2",
+                "name":"Jönköping University Public Speaking", 
+                "industry":"association",
+            },
+            {   
+                "id":"3",
+                "name":"Jönköping University", 
+                "industry":"education",
+            },
+            {   
+                "id":"4",
+                "name":"Zeytoon", 
+                "industry":"retail",
+            },
+            {   
+                "id":"5",
+                "name":"Snartup", 
+                "industry":"consulting",
+            },
+        ]
+        // inserts organizations
+        organizations.forEach( (oneOrganization) => {
+            db.run("INSERT INTO organizations (organizationID, organizationName, organizationIndustry) VALUES (?, ?, ?)", [oneOrganization.id, oneOrganization.name, oneOrganization.industry], (error) => {
+                if (error) {
+                    console.log("ERROR: ", error);
+                } else {
+                    console.log("Line added into the organizations table!");
+                }
+            });
+        });
+    }
+});
+
+
+//////////////////////////////////////////////// EXPERIENCES TABLE
+db.run("CREATE TABLE experiences (experienceID INTEGER PRIMARY KEY, experienceTitle TEXT NOT NULL, experienceDate TEXT NOT NULL, experienceDescription TEXT NOT NULL, organizationID INTEGER NOT NULL, FOREIGN KEY (organizationID) REFERENCES organizations(organizationID))", (error) => {
+    if (error) {
+        // tests error: display error
+        console.log("ERROR: ", error);
+    } else {
+        // tests error: no error, the table has been created
+        console.log("---> Table experiences created!")
+        const experiences = [
+            { 
+                "title":"Graphic Designer",
+                "date":"June 2023 - Current",
+                "description":"In this position, I create visual elements, social media posts, and other promotional content for our association. My tasks include creating the logo and visual identity, promotional posts for platforms like Instagram and Facebook, and even website graphics and photography. I use an array of software like Adobe InDesign, Illustrator, Photoshop, and Lightroom to achieve my results in this role.",
+                "orgID":"2",
+            },
+            { 
+                "title":"Board member",
+                "date":"June 2023 - Current",
+                "description":"In this position, I help students get better at talking to people, especially large audiences. Here we teach people important communication skills, and as a result, improve our own communication and social capacity daily.",
+                "orgID":"2",
+            },
+            { 
+                "title":"Programming Teaching Assistant",
+                "date":"June 2014",
+                "description":"",
+                "orgID":"1",
+            },
+            { 
+                "title":"English Teaching Assistant",
+                "date":"June 2016",
+                "description":"1",
+                "orgID":"",
+            },
+            { 
+                "title":"Media Developer",
+                "date":"September 2023",
+                "description":"",
+                "orgID":"5",
+            },
+            { 
+                "title":"Writer",
+                "date":"July 2015",
+                "description":"",
+                "orgID":"4",
+            },
+        ]
+        // inserts experiences
+        experiences.forEach( (oneExperience) => {
+            db.run("INSERT INTO experiences (experienceTitle, experienceDate, experienceDescription, organizationID) VALUES (?, ?, ?, ?)", [oneExperience.title, oneExperience.date, oneExperience.description, oneExperience.orgID], (error) => {
+                if (error) {
+                    console.log("ERROR: ", error);
+                } else {
+                    console.log("Line added into the experiences table!");
+                }
+            });
+        });
+    }
+});
+
+
+//////////////////////////////////////////////// EDUCATION TABLE
+db.run("CREATE TABLE educations (educationID INTEGER PRIMARY KEY, educationDegree TEXT NOT NULL, educationDate TEXT NOT NULL, educationDescription TEXT NOT NULL, organizationID INTEGER NOT NULL, FOREIGN KEY (organizationID) REFERENCES organizations(organizationID))", (error) => {
+    if (error) {
+        // tests error: display error
+        console.log("ERROR: ", error);
+    } else {
+        // tests error: no error, the table has been created
+        console.log("---> Table educations created!")
+        const educations = [
+            { 
+                "degree":"Bachelor of Applied Science in Graphic Design and Web Development",
+                "date":"June 2025 (Current Student)",
+                "description":"During my studies, I am learning a great deal about graphic design, UI/UX, and communication.",
+                "orgID":"3",
+            },
+            { 
+                "degree":"Bachelor of Applied Science in Computer Engineering",
+                "date":"June 2017",
+                "description":"Here, I learned most of what I know about computers, programming, and logical thinking.",
+                "orgID":"1",
+            },
+        ]
+        // inserts educations
+        educations.forEach( (oneEducation) => {
+            db.run("INSERT INTO educations (educationDegree, educationDate, educationDescription, organizationID) VALUES (?, ?, ?, ?)", [oneEducation.degree, oneEducation.date, oneEducation.description, oneEducation.orgID], (error) => {
+                if (error) {
+                    console.log("ERROR: ", error);
+                } else {
+                    console.log("Line added into the educations table!");
+                }
+            });
+        });
+    }
+});
+
 
 //////////////////////////////////////////////// PROJECTS TABLE
 db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT NOT NULL, projectCategory TEXT NOT NULL, projectDescription TEXT NOT NULL, projectThumbnail TEXT NOT NULL, projectURL TEXT)", (error) => {
@@ -86,7 +231,7 @@ db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT N
         });
     }
 });
-//////////////////////////////////////////////// PROJECTS TABLE
+
 
 //////////////////////////////////////////////// SKILLS TABLE
 db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NULL, isProfessional TEXT NOT NULL, skillDetails TEXT)", (error) => {
@@ -96,7 +241,7 @@ db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NUL
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table skills created!")
-        const projects = [
+        const skills = [
             { 
                 "name":"Adobe Creative Suite", 
                 "professional":"yes", 
@@ -158,8 +303,8 @@ db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NUL
                 "details": "Native Language",
             },
         ]
-        // inserts projects
-        projects.forEach( (oneSkill) => {
+        // inserts skills
+        skills.forEach( (oneSkill) => {
             db.run("INSERT INTO skills (skillName, isProfessional, skillDetails) VALUES (?, ?, ?)", [oneSkill.name, oneSkill.professional, oneSkill.details], (error) => {
                 if (error) {
                     console.log("ERROR: ", error);
@@ -170,9 +315,8 @@ db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NUL
         });
     }
 });
-//////////////////////////////////////////////// SKILLS TABLE
 
-//////////////////////////////////////////////// DATABASE STUFF
+//////////////////////////////////////////////////////////////////// DATABASE STUFF
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -185,10 +329,42 @@ app.get("/", (req, res)=>{
     res.render("about");
 });
 app.get("/education", (req, res)=>{
-    res.render("education");
+    db.all("SELECT * FROM organizations JOIN educations ON organizations.organizationID=educations.organizationID", (error, educationData) => {
+        if(error){
+            const model = {
+                hasDatabaseError: true,
+                theError: error,
+                educations: []
+            }
+            res.render("education", model);
+        } else{
+            const model = {
+                hasDatabaseError: false,
+                theError: "",
+                educations: educationData
+            }
+            res.render("education", model);
+        }
+    });
 });
 app.get("/experience", (req, res)=>{
-    res.render("experience");
+    db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID", (error, experienceData) => {
+        if(error){
+            const model = {
+                hasDatabaseError: true,
+                theError: error,
+                experiences: []
+            }
+            res.render("experience", model);
+        } else{
+            const model = {
+                hasDatabaseError: false,
+                theError: "",
+                experiences: experienceData
+            }
+            res.render("experience", model);
+        }
+    });
 });
 app.get("/projects", (req, res)=>{
     db.all("SELECT * FROM projects", (error, projectsData) => {

@@ -34,16 +34,13 @@
         <section class="container section-experiences">
             <h2>MY WORK EXPERIENCE</h2>
             <div class="columns">
-                <div class="experience col-12">
-                    <p class="experience-name">Graphic Designer at Jönköping University public speaking association</p>
-                    <p class="experience-date">June 2023 - Current</p>
-                    <p class="experience-description">In this position, I create visual elements, social media posts, and other promotional content for our association. My tasks include creating the logo and visual identity, promotional posts for platforms like Instagram and Facebook, and even website graphics and photography. I use an array of software like Adobe InDesign, Illustrator, Photoshop, and Lightroom to achieve my results in this role.</p>
-                </div>
-                <div class="experience col-12">
-                    <p class="experience-name">Board member of Jönköping University public speaking association</p>
-                    <p class="experience-date">June 2023 - Current</p>
-                    <p class="experience-description">In this position, I help students get better at talking to people, especially large audiences. Here we teach people important communication skills, and as a result, improve our own communication and social capacity daily.</p>
-                </div>
+                {{#each experiences}}
+                    <div class="experience col-12">
+                        <p class="experience-name">{{ experienceTitle }} at {{ organizationName }}</p>
+                        <p class="experience-date">{{ experienceDate }}</p>
+                        <p class="experience-description">{{ experienceDescription }}</p>
+                    </div>
+                {{/each}}
             </div>
         </section>
     </main>

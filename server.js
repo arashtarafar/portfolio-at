@@ -4,10 +4,11 @@ const app = express();
 const port = 8080;
 
 const sqlite3 = require("sqlite3");
-const db = new sqlite3.Database("projects-at.db");
+const db = new sqlite3.Database("portfolio-at.db");
 
 //////////////////////////////////////////////// DATABASE STUFF
-// creates table projects at startup
+
+//////////////////////////////////////////////// PROJECTS TABLE
 db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT NOT NULL, projectCategory TEXT NOT NULL, projectDescription TEXT NOT NULL, projectThumbnail TEXT NOT NULL, projectURL TEXT)", (error) => {
     if (error) {
         // tests error: display error
@@ -77,14 +78,100 @@ db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT N
         projects.forEach( (oneProject) => {
             db.run("INSERT INTO projects (projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?)", [oneProject.name, oneProject.category, oneProject.description, oneProject.thumbnail, oneProject.url], (error) => {
                 if (error) {
-                    console.log("ERROR: ", error)
+                    console.log("ERROR: ", error);
                 } else {
-                    console.log("Line added into the projects table!")
+                    console.log("Line added into the projects table!");
                 }
             });
         });
     }
 });
+//////////////////////////////////////////////// PROJECTS TABLE
+
+//////////////////////////////////////////////// SKILLS TABLE
+db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NULL, isProfessional TEXT NOT NULL, skillDetails TEXT)", (error) => {
+    if (error) {
+        // tests error: display error
+        console.log("ERROR: ", error);
+    } else {
+        // tests error: no error, the table has been created
+        console.log("---> Table skills created!")
+        const projects = [
+            { 
+                "name":"Adobe Creative Suite", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"Microsoft Office Suite", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"Visual Studio Code", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"DaVinci Resolve", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"Figma", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"Git", 
+                "professional":"yes", 
+                "details": "",
+            },
+            { 
+                "name":"Attention to Detail", 
+                "professional":"", 
+                "details": "",
+            },
+            { 
+                "name":"Critical Thinking", 
+                "professional":"", 
+                "details": "",
+            },
+            { 
+                "name":"Quick Learning and Adaptation", 
+                "professional":"", 
+                "details": "",
+            },
+            { 
+                "name":"English", 
+                "professional":"", 
+                "details": "Professional/Native proficiency",
+            },
+            { 
+                "name":"Swedish", 
+                "professional":"", 
+                "details": "Basic/Speaking proficiency",
+            },
+            { 
+                "name":"Persian", 
+                "professional":"", 
+                "details": "Native Language",
+            },
+        ]
+        // inserts projects
+        projects.forEach( (oneSkill) => {
+            db.run("INSERT INTO skills (skillName, isProfessional, skillDetails) VALUES (?, ?, ?)", [oneSkill.name, oneSkill.professional, oneSkill.details], (error) => {
+                if (error) {
+                    console.log("ERROR: ", error);
+                } else {
+                    console.log("Line added into the skills table!");
+                }
+            });
+        });
+    }
+});
+//////////////////////////////////////////////// SKILLS TABLE
+
 //////////////////////////////////////////////// DATABASE STUFF
 
 app.engine("handlebars", engine());
@@ -123,7 +210,23 @@ app.get("/projects", (req, res)=>{
     });
 });
 app.get("/skills", (req, res)=>{
-    res.render("skills");
+    db.all("SELECT * FROM skills", (error, skillsData) => {
+        if(error){
+            const model = {
+                hasDatabaseError: true,
+                theError: error,
+                skills: []
+            }
+            res.render("skills", model);
+        } else{
+            const model = {
+                hasDatabaseError: false,
+                theError: "",
+                skills: skillsData
+            }
+            res.render("skills", model);
+        }
+    });
 });
 
 app.listen(port, ()=>{

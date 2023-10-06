@@ -17,18 +17,65 @@ db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT N
         console.log("---> Table projects created!")
         const projects = [
             { 
-                "id":"1", 
                 "name":"Visual Identity Guidelines: Lush", 
-                "category":"graphics", 
+                "category":"graphic", 
                 "description": "In this course project, I made a visual identity guideline document for Lush, an imaginary beauty products company.",
                 "thumbnail":"media/img/project-graphic-1.png",
                 "url":"https://drive.google.com/file/d/1HSc1aVq66CP2O-rnDndd8XUr-xDYVkRF/view?usp=sharing"
             },
-            
+            { 
+                "name":"Printed Magazine: Plants and Gardening", 
+                "category":"graphic", 
+                "description": "This collaborative course project, put my skills in creating layouts and graphics in Illustrator and InDesign, as well as photo editing in Lightroom, to the test.",
+                "thumbnail":"media/img/project-graphic-2.png",
+                "url":"https://drive.google.com/file/d/10018Q1Kq_sbB5-MQRdFVSJzbv_7rE6VA/view?usp=sharing"
+            },
+            { 
+                "name":"Logo Concepts: JUPS", 
+                "category":"graphic", 
+                "description": "To start off my work in the Jönköping University public speaking association, I proposed logo concepts to the board. The final logo is going to represent the association in the real world, on our website, and in social media.",
+                "thumbnail":"media/img/project-graphic-3.png",
+                "url":""
+            },
+            { 
+                "name":"Space Game: Javascript Game", 
+                "category":"web", 
+                "description": "A simple javascript space game with minimalistic design, similar to the famous Lunar Lander game.",
+                "thumbnail":"media/img/project-web-1.png",
+                "url":"https://ju-nmd2022.github.io/fop-lunar-lander-arashtarafar/"
+            },
+            { 
+                "name":"No Monkey Business: Javascript Game", 
+                "category":"web", 
+                "description": "This game was designed to be simple, annoying, and addictive. A lesson in effectiveness learned from games like Flappy Bird and Skippy Squirrel.",
+                "thumbnail":"media/img/project-web-2.png",
+                "url":"https://ju-nmd2022.github.io/fop-final-project-project-34/"
+            },
+            { 
+                "name":"The Wandering: Javascript Game", 
+                "category":"web", 
+                "description": "This RPG-style game has elements of lore that are reminiscent of the Dark Souls and Elden Ring universe.",
+                "thumbnail":"media/img/project-web-3.png",
+                "url":"https://ju-nmd2022.github.io/wuid-adventure-game-arashtarafar/"
+            },
+            { 
+                "name":"Lifestyle Shoot: Fairwell Pubcrawl 2023", 
+                "category":"photography", 
+                "description": "Accompanying the groups in our university's fairwell pub event in the summer of 2023, I captured the memories and heat of the drinking and social games.",
+                "thumbnail":"media/img/project-photography-1.png",
+                "url":""
+            },
+            { 
+                "name":"Portrait Shoot: Social Media", 
+                "category":"photography", 
+                "description": "This unpaid photography and editing job, put my skills to the test, and supplied my client with an array of photos to showcase on their instagram and Tinder accounts.",
+                "thumbnail":"media/img/project-photography-2.png",
+                "url":""
+            },
         ]
         // inserts projects
         projects.forEach( (oneProject) => {
-            db.run("INSERT INTO projects (projectID, projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?, ?)", [oneProject.id, oneProject.name, oneProject.category, oneProject.description, oneProject.thumbnail, oneProject.url], (error) => {
+            db.run("INSERT INTO projects (projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?)", [oneProject.name, oneProject.category, oneProject.description, oneProject.thumbnail, oneProject.url], (error) => {
                 if (error) {
                     console.log("ERROR: ", error)
                 } else {
@@ -48,13 +95,13 @@ app.use(express.static("public"));
 
 // Routing
 app.get("/", (req, res)=>{
-    res.render("about.handlebars");
+    res.render("about");
 });
 app.get("/education", (req, res)=>{
-    res.render("education.handlebars");
+    res.render("education");
 });
 app.get("/experience", (req, res)=>{
-    res.render("experience.handlebars");
+    res.render("experience");
 });
 app.get("/projects", (req, res)=>{
     db.all("SELECT * FROM projects", (error, projectsData) => {
@@ -64,19 +111,19 @@ app.get("/projects", (req, res)=>{
                 theError: error,
                 projects: []
             }
-            res.render("projects.handlebars", model);
+            res.render("projects", model);
         } else{
             const model = {
                 hasDatabaseError: false,
                 theError: "",
                 projects: projectsData
             }
-            res.render("projects.handlebars", model);
+            res.render("projects", model);
         }
     });
 });
 app.get("/skills", (req, res)=>{
-    res.render("skills.handlebars");
+    res.render("skills");
 });
 
 app.listen(port, ()=>{

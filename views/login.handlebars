@@ -27,48 +27,17 @@
                 <div class="darkmode-toggle">
                     <i class="bi bi-brightness-high-fill toggle-icon"></i>
                 </div>
-            </nav>
+            </nav>            
         </div>
     </header>
     <main>
-        <a class="anchor" id="skills"></a>
-        <section class="container section-skills">
-            <h2>MY SKILLSET AND LANGUAGES</h2>
-            <div class="columns">
-                <div class="col-4 col-md-12">
-                    <h3>PROFESSIONAL SKILLS</h3>
-                    <ul>
-                        {{#each skills}}
-                            {{#if isProfessional}}
-                                <li>{{ skillName }}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
-                </div>
-                <div class="col-4 col-md-12">
-                    <h3>SOFT SKILLS</h3>
-                    <ul>
-                        {{#each skills}}
-                            {{#unless isProfessional}}
-                                {{#unless skillDetails}}
-                                    <li>{{ skillName }}</li>
-                                {{/unless}}
-                            {{/unless}}
-                        {{/each}}
-                    </ul>
-                </div>
-                <div class="col-4 col-md-12">
-                    <h3>LANGUAGES</h3>
-                    {{#each skills}}
-                        {{#if skillDetails}}
-                            <div class="language">
-                                <p class="language-name">{{ skillName }}</p>
-                                <p class="language-proficiency">{{ skillDetails }}</p>
-                            </div>
-                        {{/if}}
-                    {{/each}}
-                </div>
-            </div>
+        <section class="section-login">
+            <h2>ADMINISTRATION LOGIN</h2>
+            <form action="./login" method="POST">
+                <input type="text" name="username" id="username" placeholder="Your Username">
+                <input type="password" name="password" id="password" placeholder="Your Password">
+                <input type="submit" value="LOG IN">
+            </form>
         </section>
     </main>
     <footer class="container">

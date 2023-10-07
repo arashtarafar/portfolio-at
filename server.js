@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const { engine } = require("express-handlebars");
 const app = express();
 const port = 8080;
@@ -323,6 +324,8 @@ app.set("view engine", "handlebars");
 app.set("views", "./views");
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Routing
 app.get("/", (req, res)=>{
@@ -403,6 +406,17 @@ app.get("/skills", (req, res)=>{
             res.render("skills", model);
         }
     });
+});
+app.get("/login", (req, res)=>{
+    res.render("login");
+});
+
+app.post("/login", (req, res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(`User data received => username: ${username} password: ${password}`);
+    res.render("login");
 });
 
 app.listen(port, ()=>{

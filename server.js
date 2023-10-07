@@ -1,10 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const { engine } = require("express-handlebars");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = 8080;
 
+// initialize the sqlite3 middleware and create a new database for the website
 const sqlite3 = require("sqlite3");
+const connectSqlite3 = require("connect-sqlite3");
 const db = new sqlite3.Database("portfolio-at.db");
 
 //////////////////////////////////////////////////////////////////// DATABASE STUFF
@@ -319,22 +323,49 @@ db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NUL
 
 //////////////////////////////////////////////////////////////////// DATABASE STUFF
 
+// initialize handlebars middleware and set the views directory
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "./views");
 
+// set the public directory for fixed assets
 app.use(express.static("public"));
+
+// use bodyParser middleware to read data from POST request bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// initialize the session database middleware
+const SQLiteStore = connectSqlite3(session);
+
+// create the session database and define the session
+app.use(session({
+    store: new SQLiteStore({db: "session-db.db"}),
+    "saveUninitialized": false,
+    "resave": false,
+    "secret": "This123Is@Another#456GreatSecret678%Sentence"
+}));
+
 // Routing
 app.get("/", (req, res)=>{
-    res.render("about");
+    console.log("SESSION: ", req.session);
+
+    const model = {
+        isLoggedIn: req.session.isLoggedIn,
+        name: req.session.name,
+        isAdmin: req.session.isAdmin
+    }
+    res.render("about", model);
 });
 app.get("/education", (req, res)=>{
+    console.log("SESSION: ", req.session);
+
     db.all("SELECT * FROM organizations JOIN educations ON organizations.organizationID=educations.organizationID", (error, educationData) => {
         if(error){
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: true,
                 theError: error,
                 educations: []
@@ -342,6 +373,9 @@ app.get("/education", (req, res)=>{
             res.render("education", model);
         } else{
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: false,
                 theError: "",
                 educations: educationData
@@ -351,9 +385,14 @@ app.get("/education", (req, res)=>{
     });
 });
 app.get("/experience", (req, res)=>{
+    console.log("SESSION: ", req.session);
+
     db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID", (error, experienceData) => {
         if(error){
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: true,
                 theError: error,
                 experiences: []
@@ -361,6 +400,9 @@ app.get("/experience", (req, res)=>{
             res.render("experience", model);
         } else{
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: false,
                 theError: "",
                 experiences: experienceData
@@ -370,9 +412,14 @@ app.get("/experience", (req, res)=>{
     });
 });
 app.get("/projects", (req, res)=>{
+    console.log("SESSION: ", req.session);
+
     db.all("SELECT * FROM projects", (error, projectsData) => {
         if(error){
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: true,
                 theError: error,
                 projects: []
@@ -380,6 +427,9 @@ app.get("/projects", (req, res)=>{
             res.render("projects", model);
         } else{
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: false,
                 theError: "",
                 projects: projectsData
@@ -389,9 +439,14 @@ app.get("/projects", (req, res)=>{
     });
 });
 app.get("/skills", (req, res)=>{
+    console.log("SESSION: ", req.session);
+
     db.all("SELECT * FROM skills", (error, skillsData) => {
         if(error){
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: true,
                 theError: error,
                 skills: []
@@ -399,6 +454,9 @@ app.get("/skills", (req, res)=>{
             res.render("skills", model);
         } else{
             const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
                 hasDatabaseError: false,
                 theError: "",
                 skills: skillsData
@@ -410,13 +468,36 @@ app.get("/skills", (req, res)=>{
 app.get("/login", (req, res)=>{
     res.render("login");
 });
-
 app.post("/login", (req, res)=>{
     const username = req.body.username;
     const password = req.body.password;
 
     console.log(`User data received => username: ${username} password: ${password}`);
-    res.render("login");
+
+    // Check whether correct username and password for admin is entered
+    // username: admin
+    // password: ^r^shn3V3rL0s3s
+    if(username == "admin" && password == "^r^shn3V3rL0s3s"){
+        console.log("Administrator is logged in!");
+        req.session.isAdmin = true;
+        req.session.isLoggedIn = true;
+        req.session.name = "Admin";
+        res.redirect("/");
+    } else{
+        console.log("Incorrect username and/or password");
+        req.session.isAdmin = false;
+        req.session.isLoggedIn = false;
+        req.session.name = "";
+        res.redirect("/login");
+    }
+});
+app.get("/logout", (req, res)=>{
+    console.log("Successfully logged out of " + req.session.name + ".");
+
+    req.session.isAdmin = false;
+    req.session.isLoggedIn = false;
+    req.session.name = "";
+    res.redirect("/");
 });
 
 app.listen(port, ()=>{

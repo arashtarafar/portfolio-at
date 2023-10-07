@@ -39,40 +39,60 @@
         <section class="container section-skills">
             <h2>MY SKILLSET AND LANGUAGES</h2>
             <div class="columns">
-                <div class="col-4 col-md-12">
+                <div class="col-4 col-md-12 skills-professional">
                     <h3>PROFESSIONAL SKILLS</h3>
                     <ul>
                         {{#each skills}}
                             {{#if isProfessional}}
-                                <li>{{ skillName }}</li>
+                                <li>
+                                    {{#if ../isAdmin}}
+                                        <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
+                                    {{/if}}
+                                    {{ skillName }}
+                                </li>
                             {{/if}}
                         {{/each}}
                     </ul>
                 </div>
-                <div class="col-4 col-md-12">
+                <div class="col-4 col-md-12 skills-soft">
                     <h3>SOFT SKILLS</h3>
                     <ul>
                         {{#each skills}}
                             {{#unless isProfessional}}
                                 {{#unless skillDetails}}
-                                    <li>{{ skillName }}</li>
+                                    <li>
+                                        {{#if ../isAdmin}}
+                                            <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
+                                        {{/if}}
+                                        {{ skillName }}
+                                    </li>
                                 {{/unless}}
                             {{/unless}}
                         {{/each}}
                     </ul>
                 </div>
-                <div class="col-4 col-md-12">
+                <div class="col-4 col-md-12 skills-linguistic">
                     <h3>LANGUAGES</h3>
                     {{#each skills}}
                         {{#if skillDetails}}
                             <div class="language">
-                                <p class="language-name">{{ skillName }}</p>
+                                <p class="language-name">
+                                    {{ skillName }}
+                                    {{#if ../isAdmin}}
+                                        <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
+                                    {{/if}}
+                                </p>
                                 <p class="language-proficiency">{{ skillDetails }}</p>
                             </div>
                         {{/if}}
                     {{/each}}
                 </div>
             </div>
+            {{#if isAdmin}}
+                <p>
+                    <a href="/skills/create" class="btn-admin btn-create">+ Add New Skill</a>
+                </p>
+            {{/if}}
         </section>
     </main>
     <footer class="container">

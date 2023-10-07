@@ -312,6 +312,22 @@ section h2{
     line-height: 125%;
 }
 
+.project .links{
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.project .links .btn-admin{
+    margin-right: 1rem;
+}
+
+.new-project{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .section-skills{
     background-color: var(--background-color-darker);
     padding-left: 4rem;
@@ -474,6 +490,48 @@ footer{
 
 .section-login form input[type=submit]:hover{
     background-color: var(--link-color-hover);
+}
+
+.btn-admin{
+    display: inline-block;
+    font-family: 'Oxygen', sans-serif;
+}
+
+.section-experiences .btn-admin{
+    margin: 1rem 1rem 1rem 0;
+}
+
+.section-experiences .btn-create{
+    margin-top: 2.5rem;
+}
+
+.btn-admin:link,
+.btn-admin:visited{
+    color: var(--link-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-admin:hover,
+.btn-admin:active{
+    color: var(--link-color-hover);
+}
+
+.section-skills .btn-delete{
+    margin-right: 1rem;
+}
+
+.skills-linguistic .btn-delete{
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+.section-education .btn-admin{
+    margin: 1rem 1rem 1rem 0;
+}
+
+.section-education .btn-create{
+    margin-top: 0;
 }
 
 @media only screen and (max-width: 960px){

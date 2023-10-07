@@ -39,7 +39,7 @@
         <section class="container section-projects">
             <h2>MY PROJECTS</h2>
             <a class="anchor" id="graphics"></a>
-            <div class="project-field projects-graphics">
+            <div class="project-field">
                 <div class="columns">
                     {{#each projects}}
                         <div class="project col-4 col-sm-12 col-lg-6 col-md-12">
@@ -47,8 +47,19 @@
                             <p class="project-name">{{ projectName }}</p>                            
                             <a href="{{ projectURL }}" class="project-link" target="_blank">{{#if projectURL}}Take a Look{{/if}}</a>
                             <p class="project-description">{{ projectDescription }}</p>
+                            {{#if ../isAdmin}}
+                                <p class="links">
+                                    <a href="/experience/update/{{ projectID }}" class="btn-admin btn-update">Change</a>
+                                    <a href="/experience/delete/{{ projectID }}" class="btn-admin btn-delete">Remove</a>
+                                </p>
+                            {{/if}}
                         </div>
                     {{/each}}
+                    {{#if isAdmin}}
+                        <div class="new-project col-4 col-sm-12 col-lg-6 col-md-12">
+                            <a href="/projects/create" class="btn-admin btn-create">+ Add a Project</a>
+                        </div>
+                    {{/if}}
                 </div>
             </div>
         </section>

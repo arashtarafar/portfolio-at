@@ -48,8 +48,23 @@
                     <div class="col-4 col-md-12">
                         <p class="education-description">{{ educationDescription }}</p>
                     </div>
+                    {{#if ../isAdmin}}
+                        <p>
+                            <a href="/education/update/{{ educationID }}" class="btn-admin btn-update">Change</a>
+                            <a href="/education/delete/{{ educationID }}" class="btn-admin btn-delete">Remove</a>
+                        </p>
+                    {{/if}}
                 </div>
             {{/each}}
+            <div class="columns">
+                <div class="col-12">
+                    {{#if isAdmin}}
+                        <p>
+                            <a href="/education/create" class="btn-admin btn-create">+ Add an Education</a>
+                        </p>
+                    {{/if}}
+                </div>
+            </div>
         </section>
     </main>
     <footer class="container">

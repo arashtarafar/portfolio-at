@@ -14,7 +14,7 @@ const db = new sqlite3.Database("portfolio-at.db");
 //////////////////////////////////////////////////////////////////// DATABASE STUFF
 
 //////////////////////////////////////////////// ORGANIZATIONS TABLE
-db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organizationName TEXT NOT NULL, organizationIndustry TEXT NOT NULL)", (error) => {
+db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organizationName TEXT NOT NULL, isEducational TEXT NOT NULL)", (error) => {
     if (error) {
         // tests error: display error
         // console.log("ERROR: ", error);
@@ -25,32 +25,32 @@ db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organiza
             { 
                 "id":"1",
                 "name":"Amirkabir University of Technology", 
-                "industry":"education",
+                "educational":"true",
             },
             {   
                 "id":"2",
                 "name":"Jönköping University Public Speaking", 
-                "industry":"association",
+                "educational":"",
             },
             {   
                 "id":"3",
                 "name":"Jönköping University", 
-                "industry":"education",
+                "educational":"true",
             },
             {   
                 "id":"4",
                 "name":"Zeytoon", 
-                "industry":"retail",
+                "educational":"",
             },
             {   
                 "id":"5",
                 "name":"Snartup", 
-                "industry":"consulting",
+                "educational":"",
             },
         ]
         // inserts organizations
         organizations.forEach( (oneOrganization) => {
-            db.run("INSERT INTO organizations (organizationID, organizationName, organizationIndustry) VALUES (?, ?, ?)", [oneOrganization.id, oneOrganization.name, oneOrganization.industry], (error) => {
+            db.run("INSERT INTO organizations (organizationID, organizationName, isEducational) VALUES (?, ?, ?)", [oneOrganization.id, oneOrganization.name, oneOrganization.educational], (error) => {
                 if (error) {
                     console.log("ERROR: ", error);
                 } else {
@@ -347,6 +347,8 @@ app.use(session({
 }));
 
 // Routing
+
+//////////////////////////////////////////////////////////////////// ABOUT PAGE
 app.get("/", (req, res)=>{
     // console.log("SESSION: ", req.session);
 
@@ -357,6 +359,8 @@ app.get("/", (req, res)=>{
     }
     res.render("about", model);
 });
+
+//////////////////////////////////////////////////////////////////// EDUCATION PAGE
 app.get("/education", (req, res)=>{
     // console.log("SESSION: ", req.session);
 
@@ -412,9 +416,11 @@ app.get("/education/delete/:id", (req, res)=>{
         res.redirect("/login");
     }
 });
+
+//////////////////////////////////////////////////////////////////// EXPERIENCE PAGE
 app.get("/experience", (req, res)=>{
     // console.log("SESSION: ", req.session);
-
+    
     db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID", (error, experienceData) => {
         if(error){
             const model = {
@@ -469,6 +475,110 @@ app.get("/experience/delete/:id", (req, res)=>{
         res.redirect("/login");
     }
 });
+app.get("/experience/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("SELECT * FROM organizations", (error, organizationData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    hasDatabaseError: true,
+                    theError: error,
+                    organizations: []
+                }
+                res.render("experience/create", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    hasDatabaseError: false,
+                    theError: "",
+                    organizations: organizationData
+                }
+                res.render("experience/create", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/experience/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        const newExperience = [
+            req.body.experienceTitle,
+            req.body.experienceDate,
+            req.body.experienceDescription,
+            req.body.organization
+        ];
+        db.run("INSERT INTO experiences (experienceTitle, experienceDate, experienceDescription, organizationID) VALUES (?, ?, ?, ?)", newExperience, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("New experience added!");
+            }
+            res.redirect("/experience");
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/experience/update/:id", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID WHERE experienceID=?;", [req.params.id], (error, experienceData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    hasDatabaseError: true,
+                    theError: error,
+                    experience: []
+                }
+                res.render("experience/update", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    hasDatabaseError: false,
+                    theError: "",
+                    experience: experienceData
+                }
+                res.render("experience/update", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/experience/update/:id", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        const experienceDataBundle = [
+            req.body.experienceTitle,
+            req.body.experienceDate,
+            req.body.experienceDescription,
+            req.body.organization,
+            req.params.id
+        ];
+        db.run("UPDATE experiences SET experienceTitle=?, experienceDate=?, experienceDescription=?, organizationID=? WHERE experienceID=?", experienceDataBundle, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("Experience modified!");
+            }
+            res.redirect("/experience");
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+
+//////////////////////////////////////////////////////////////////// PROJECTS PAGE
 app.get("/projects", (req, res)=>{
     // console.log("SESSION: ", req.session);
 
@@ -524,6 +634,8 @@ app.get("/projects/delete/:id", (req, res)=>{
         res.redirect("/login");
     }
 });
+
+//////////////////////////////////////////////////////////////////// SKILLS PAGE
 app.get("/skills", (req, res)=>{
     // console.log("SESSION: ", req.session);
 
@@ -579,6 +691,8 @@ app.get("/skills/delete/:id", (req, res)=>{
         res.redirect("/login");
     }
 });
+
+//////////////////////////////////////////////////////////////////// LOGIN PAGES
 app.get("/login", (req, res)=>{
     res.render("login");
 });

@@ -17,7 +17,7 @@ const db = new sqlite3.Database("portfolio-at.db");
 db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organizationName TEXT NOT NULL, organizationIndustry TEXT NOT NULL)", (error) => {
     if (error) {
         // tests error: display error
-        console.log("ERROR: ", error);
+        // console.log("ERROR: ", error);
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table organizations created!")
@@ -66,7 +66,7 @@ db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organiza
 db.run("CREATE TABLE experiences (experienceID INTEGER PRIMARY KEY, experienceTitle TEXT NOT NULL, experienceDate TEXT NOT NULL, experienceDescription TEXT NOT NULL, organizationID INTEGER NOT NULL, FOREIGN KEY (organizationID) REFERENCES organizations(organizationID))", (error) => {
     if (error) {
         // tests error: display error
-        console.log("ERROR: ", error);
+        // console.log("ERROR: ", error);
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table experiences created!")
@@ -126,7 +126,7 @@ db.run("CREATE TABLE experiences (experienceID INTEGER PRIMARY KEY, experienceTi
 db.run("CREATE TABLE educations (educationID INTEGER PRIMARY KEY, educationDegree TEXT NOT NULL, educationDate TEXT NOT NULL, educationDescription TEXT NOT NULL, organizationID INTEGER NOT NULL, FOREIGN KEY (organizationID) REFERENCES organizations(organizationID))", (error) => {
     if (error) {
         // tests error: display error
-        console.log("ERROR: ", error);
+        // console.log("ERROR: ", error);
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table educations created!")
@@ -162,7 +162,7 @@ db.run("CREATE TABLE educations (educationID INTEGER PRIMARY KEY, educationDegre
 db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT NOT NULL, projectCategory TEXT NOT NULL, projectDescription TEXT NOT NULL, projectThumbnail TEXT NOT NULL, projectURL TEXT)", (error) => {
     if (error) {
         // tests error: display error
-        console.log("ERROR: ", error);
+        // console.log("ERROR: ", error);
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table projects created!")
@@ -242,7 +242,7 @@ db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT N
 db.run("CREATE TABLE skills (skillID INTEGER PRIMARY KEY, skillName TEXT NOT NULL, isProfessional TEXT NOT NULL, skillDetails TEXT)", (error) => {
     if (error) {
         // tests error: display error
-        console.log("ERROR: ", error);
+        // console.log("ERROR: ", error);
     } else {
         // tests error: no error, the table has been created
         console.log("---> Table skills created!")
@@ -348,7 +348,7 @@ app.use(session({
 
 // Routing
 app.get("/", (req, res)=>{
-    console.log("SESSION: ", req.session);
+    // console.log("SESSION: ", req.session);
 
     const model = {
         isLoggedIn: req.session.isLoggedIn,
@@ -358,7 +358,7 @@ app.get("/", (req, res)=>{
     res.render("about", model);
 });
 app.get("/education", (req, res)=>{
-    console.log("SESSION: ", req.session);
+    // console.log("SESSION: ", req.session);
 
     db.all("SELECT * FROM organizations JOIN educations ON organizations.organizationID=educations.organizationID", (error, educationData) => {
         if(error){
@@ -384,8 +384,36 @@ app.get("/education", (req, res)=>{
         }
     });
 });
+app.get("/education/delete/:id", (req, res)=>{
+    const id = req.params.id;
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("DELETE FROM educations WHERE educationID=?", [id], (error, educationData)=>{
+            if(error){
+                const model = {
+                    dbError: true,
+                    theError: error,
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/education");
+            }else{
+                const model = {
+                    dbError: false,
+                    theError: "",
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/education");
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
 app.get("/experience", (req, res)=>{
-    console.log("SESSION: ", req.session);
+    // console.log("SESSION: ", req.session);
 
     db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID", (error, experienceData) => {
         if(error){
@@ -411,8 +439,38 @@ app.get("/experience", (req, res)=>{
         }
     });
 });
+app.get("/experience/delete/:id", (req, res)=>{
+    const id = req.params.id;
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("DELETE FROM experiences WHERE experienceID=?;", [id], (error, experienceData)=>{
+            if(error){
+                const model = {
+                    dbError: true,
+                    theError: error,
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    experiences: experienceData
+                }
+                res.redirect("/experience");
+            }else{
+                const model = {
+                    dbError: false,
+                    theError: "",
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    experiences: experienceData
+                }
+                res.redirect("/experience");
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
 app.get("/projects", (req, res)=>{
-    console.log("SESSION: ", req.session);
+    // console.log("SESSION: ", req.session);
 
     db.all("SELECT * FROM projects", (error, projectsData) => {
         if(error){
@@ -438,8 +496,36 @@ app.get("/projects", (req, res)=>{
         }
     });
 });
+app.get("/projects/delete/:id", (req, res)=>{
+    const id = req.params.id;
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("DELETE FROM projects WHERE projectID=?", [id], (error, projectData)=>{
+            if(error){
+                const model = {
+                    dbError: true,
+                    theError: error,
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/projects");
+            }else{
+                const model = {
+                    dbError: false,
+                    theError: "",
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/projects");
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
 app.get("/skills", (req, res)=>{
-    console.log("SESSION: ", req.session);
+    // console.log("SESSION: ", req.session);
 
     db.all("SELECT * FROM skills", (error, skillsData) => {
         if(error){
@@ -464,6 +550,34 @@ app.get("/skills", (req, res)=>{
             res.render("skills", model);
         }
     });
+});
+app.get("/skills/delete/:id", (req, res)=>{
+    const id = req.params.id;
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("DELETE FROM skills WHERE skillID=?", [id], (error, skillsData)=>{
+            if(error){
+                const model = {
+                    dbError: true,
+                    theError: error,
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/skills");
+            }else{
+                const model = {
+                    dbError: false,
+                    theError: "",
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/skills");
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
 });
 app.get("/login", (req, res)=>{
     res.render("login");

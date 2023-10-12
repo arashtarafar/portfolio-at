@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const { engine } = require("express-handlebars");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 const app = express();
 const port = 8080;
 
@@ -12,6 +13,41 @@ const connectSqlite3 = require("connect-sqlite3");
 const db = new sqlite3.Database("portfolio-at.db");
 
 //////////////////////////////////////////////////////////////////// DATABASE STUFF
+
+//////////////////////////////////////////////// USERS TABLE
+db.run("CREATE TABLE users (userID INTEGER PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, displayName TEXT NOT NULL, canEdit TEXT)", (error) => {
+    if (error) {
+        // tests error: display error
+        // console.log("ERROR: ", error);
+    } else {
+        // tests error: no error, the table has been created
+        console.log("---> Table users created!")
+        const users = [
+            { 
+                "username":"arashtarafar",
+                "password":"$2b$12$yEXI.hG2rfDseTAawMuc8OGybTPfwLhFqFcrUNl3OnFjop/n7x.Vi", // ^r^shn3V3rL0s3s
+                "display":"Arash", 
+                "edit":"true"
+            },
+            { 
+                "username":"jerland",
+                "password":"$2b$12$REq/C7WMnbBcUigKA8iKmO6YvvdXSvbg/VXPK0JASAtb6rB6Id2iu", // jerome1234
+                "display":"Jérôme",
+                "edit":"true"
+            },
+        ]
+        // inserts users
+        users.forEach( (oneUser) => {
+            db.run("INSERT INTO users (username, password, displayName, canEdit) VALUES (?, ?, ?, ?)", [oneUser.username, oneUser.password, oneUser.display, oneUser.edit], (error) => {
+                if (error) {
+                    console.log("ERROR: ", error);
+                } else {
+                    console.log("Line added into the users table!");
+                }
+            });
+        });
+    }
+});
 
 //////////////////////////////////////////////// ORGANIZATIONS TABLE
 db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organizationName TEXT NOT NULL, isEducational TEXT NOT NULL)", (error) => {
@@ -699,18 +735,36 @@ app.get("/login", (req, res)=>{
 app.post("/login", (req, res)=>{
     const username = req.body.username;
     const password = req.body.password;
+    // const saltRounds = 12;
 
     console.log(`User data received => username: ${username} password: ${password}`);
+    
+    // bcrypt.hash(password, saltRounds, (err, hash)=>{
+    //     console.log(`Hashed "${password}" with bcrypt is: ${hash}`);
+    // });
 
     // Check whether correct username and password for admin is entered
     // username: admin
-    // password: ^r^shn3V3rL0s3s
-    if(username == "admin" && password == "^r^shn3V3rL0s3s"){
-        console.log("Administrator is logged in!");
-        req.session.isAdmin = true;
-        req.session.isLoggedIn = true;
-        req.session.name = "Admin";
-        res.redirect("/");
+    // password: ^r^shs0M3t1m3sL0s3s
+    if(username == "admin"){
+        bcrypt.compare(password, "$2b$12$swsPhCTFKCYNnT95zzVJJecLiBqqPbn3NPd61qJ1iHIcvPIl.ifV6", (error, result)=>{
+            if(error){
+                console.log("Error in comparing encryption: ", error);
+            }else if(result == true){
+                console.log("Administrator is logged in!");
+                req.session.isAdmin = true;
+                req.session.isLoggedIn = true;
+                req.session.name = "Admin";
+                res.redirect("/");
+            }else{
+                console.log("Incorrect username and/or password");
+                req.session.isAdmin = false;
+                req.session.isLoggedIn = false;
+                req.session.name = "";
+                res.redirect("/login");
+            }
+        });
+        
     } else{
         console.log("Incorrect username and/or password");
         req.session.isAdmin = false;

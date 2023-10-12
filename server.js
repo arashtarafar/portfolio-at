@@ -391,7 +391,8 @@ app.get("/", (req, res)=>{
     const model = {
         isLoggedIn: req.session.isLoggedIn,
         name: req.session.name,
-        isAdmin: req.session.isAdmin
+        isAdmin: req.session.isAdmin,
+        canEdit: req.session.canEdit,
     }
     res.render("about", model);
 });
@@ -406,6 +407,7 @@ app.get("/education", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: true,
                 theError: error,
                 educations: []
@@ -416,6 +418,7 @@ app.get("/education", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: false,
                 theError: "",
                 educations: educationData
@@ -434,7 +437,8 @@ app.get("/education/delete/:id", (req, res)=>{
                     theError: error,
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
-                    isAdmin: req.session.isAdmin
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                 }
                 res.redirect("/education");
             }else{
@@ -443,7 +447,8 @@ app.get("/education/delete/:id", (req, res)=>{
                     theError: "",
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
-                    isAdmin: req.session.isAdmin
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                 }
                 res.redirect("/education");
             }
@@ -463,6 +468,7 @@ app.get("/experience", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: true,
                 theError: error,
                 experiences: []
@@ -473,6 +479,7 @@ app.get("/experience", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: false,
                 theError: "",
                 experiences: experienceData
@@ -483,7 +490,7 @@ app.get("/experience", (req, res)=>{
 });
 app.get("/experience/delete/:id", (req, res)=>{
     const id = req.params.id;
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("DELETE FROM experiences WHERE experienceID=?;", [id], (error, experienceData)=>{
             if(error){
                 const model = {
@@ -492,6 +499,7 @@ app.get("/experience/delete/:id", (req, res)=>{
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     experiences: experienceData
                 }
                 res.redirect("/experience");
@@ -502,6 +510,7 @@ app.get("/experience/delete/:id", (req, res)=>{
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     experiences: experienceData
                 }
                 res.redirect("/experience");
@@ -514,13 +523,14 @@ app.get("/experience/delete/:id", (req, res)=>{
 app.get("/experience/create", (req, res)=>{
     // console.log("SESSION: ", req.session);
     
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("SELECT * FROM organizations", (error, organizationData) => {
             if(error){
                 const model = {
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     hasDatabaseError: true,
                     theError: error,
                     organizations: []
@@ -531,6 +541,7 @@ app.get("/experience/create", (req, res)=>{
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     hasDatabaseError: false,
                     theError: "",
                     organizations: organizationData
@@ -543,7 +554,7 @@ app.get("/experience/create", (req, res)=>{
     }
 });
 app.post("/experience/create", (req, res)=>{
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         const newExperience = [
             req.body.experienceTitle,
             req.body.experienceDate,
@@ -564,13 +575,14 @@ app.post("/experience/create", (req, res)=>{
 });
 app.get("/experience/update/:id", (req, res)=>{
     // console.log("SESSION: ", req.session);
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("SELECT * FROM organizations JOIN experiences ON organizations.organizationID=experiences.organizationID WHERE experienceID=?;", [req.params.id], (error, experienceData) => {
             if(error){
                 const model = {
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     hasDatabaseError: true,
                     theError: error,
                     experience: []
@@ -581,6 +593,7 @@ app.get("/experience/update/:id", (req, res)=>{
                     isLoggedIn: req.session.isLoggedIn,
                     name: req.session.name,
                     isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
                     hasDatabaseError: false,
                     theError: "",
                     experience: experienceData
@@ -593,7 +606,7 @@ app.get("/experience/update/:id", (req, res)=>{
     }
 });
 app.post("/experience/update/:id", (req, res)=>{
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         const experienceDataBundle = [
             req.body.experienceTitle,
             req.body.experienceDate,
@@ -624,6 +637,7 @@ app.get("/projects", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: true,
                 theError: error,
                 projects: []
@@ -634,6 +648,7 @@ app.get("/projects", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: false,
                 theError: "",
                 projects: projectsData
@@ -644,7 +659,7 @@ app.get("/projects", (req, res)=>{
 });
 app.get("/projects/delete/:id", (req, res)=>{
     const id = req.params.id;
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("DELETE FROM projects WHERE projectID=?", [id], (error, projectData)=>{
             if(error){
                 const model = {
@@ -681,6 +696,7 @@ app.get("/skills", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: true,
                 theError: error,
                 skills: []
@@ -691,6 +707,7 @@ app.get("/skills", (req, res)=>{
                 isLoggedIn: req.session.isLoggedIn,
                 name: req.session.name,
                 isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
                 hasDatabaseError: false,
                 theError: "",
                 skills: skillsData
@@ -701,7 +718,7 @@ app.get("/skills", (req, res)=>{
 });
 app.get("/skills/delete/:id", (req, res)=>{
     const id = req.params.id;
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("DELETE FROM skills WHERE skillID=?", [id], (error, skillsData)=>{
             if(error){
                 const model = {
@@ -737,7 +754,7 @@ app.post("/login", (req, res)=>{
     const password = req.body.password;
     // const saltRounds = 12;
 
-    console.log(`User data received => username: ${username} password: ${password}`);
+    // console.log(`User data received => username: ${username} password: ${password}`);
     
     // bcrypt.hash(password, saltRounds, (err, hash)=>{
     //     console.log(`Hashed "${password}" with bcrypt is: ${hash}`);
@@ -747,36 +764,68 @@ app.post("/login", (req, res)=>{
     // username: admin
     // password: ^r^shs0M3t1m3sL0s3s
     if(username == "admin"){
-        bcrypt.compare(password, "$2b$12$swsPhCTFKCYNnT95zzVJJecLiBqqPbn3NPd61qJ1iHIcvPIl.ifV6", (error, result)=>{
+        bcrypt.compare(password, "$2b$12$UGk4j/8GnyTZy0GFaxghaOJlxxUCeQ6CM9fkA3HlofTtN4dDGwoSC", (error, result)=>{
             if(error){
                 console.log("Error in comparing encryption: ", error);
             }else if(result == true){
+                console.log("comparison with admin password returned true");
                 console.log("Administrator is logged in!");
-                req.session.isAdmin = true;
                 req.session.isLoggedIn = true;
+                req.session.isAdmin = true;
+                req.session.canEdit = "true";
                 req.session.name = "Admin";
                 res.redirect("/");
             }else{
                 console.log("Incorrect username and/or password");
-                req.session.isAdmin = false;
                 req.session.isLoggedIn = false;
+                req.session.isAdmin = false;
+                req.session.canEdit = "";
                 req.session.name = "";
                 res.redirect("/login");
             }
         });
-        
     } else{
-        console.log("Incorrect username and/or password");
-        req.session.isAdmin = false;
-        req.session.isLoggedIn = false;
-        req.session.name = "";
-        res.redirect("/login");
+        db.all("SELECT * FROM users WHERE username=?", [username], (error, userData) => {
+            if(error){
+                console.log("Error when reading user from database: ", error);
+                res.redirect("/login");
+            } else{
+                if(userData.length > 0){
+                    bcrypt.compare(password, userData[0].password, (error, result)=>{
+                        if(error){
+                            console.log("Error in comparing encryption: ", error);
+                        }else if(result == true){
+                            console.log(`${userData[0].displayName} is logged in!`);
+                            req.session.isLoggedIn = true;
+                            req.session.isAdmin = false;
+                            req.session.canEdit = userData[0].canEdit;
+                            req.session.name = userData[0].displayName;
+                            res.redirect("/");
+                        }else{
+                            console.log("Incorrect username and/or password");
+                            req.session.isLoggedIn = false;
+                            req.session.isAdmin = false;
+                            req.session.canEdit = "";
+                            req.session.name = "";
+                            res.redirect("/login");
+                        }
+                    });
+                }else{
+                    console.log("Incorrect username and/or password");
+                    req.session.isAdmin = false;
+                    req.session.isLoggedIn = false;
+                    req.session.name = "";
+                    res.redirect("/login");
+                }
+            }
+        });
     }
 });
 app.get("/logout", (req, res)=>{
     console.log("Successfully logged out of " + req.session.name + ".");
 
     req.session.isAdmin = false;
+    req.session.canEdit = "";
     req.session.isLoggedIn = false;
     req.session.name = "";
     res.redirect("/");

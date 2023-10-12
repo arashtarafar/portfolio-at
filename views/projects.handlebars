@@ -47,7 +47,7 @@
                             <p class="project-name">{{ projectName }}</p>                            
                             <a href="{{ projectURL }}" class="project-link" target="_blank">{{#if projectURL}}Take a Look{{/if}}</a>
                             <p class="project-description">{{ projectDescription }}</p>
-                            {{#if ../isAdmin}}
+                            {{#if ../canEdit}}
                                 <p class="links">
                                     <a href="/projects/update/{{ projectID }}" class="btn-admin btn-update">Change</a>
                                     <a href="/projects/delete/{{ projectID }}" class="btn-admin btn-delete">Remove</a>
@@ -55,7 +55,7 @@
                             {{/if}}
                         </div>
                     {{/each}}
-                    {{#if isAdmin}}
+                    {{#if canEdit}}
                         <div class="new-project col-4 col-sm-12 col-lg-6 col-md-12">
                             <a href="/projects/create" class="btn-admin btn-create">+ Add a Project</a>
                         </div>

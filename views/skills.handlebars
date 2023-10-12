@@ -45,7 +45,7 @@
                         {{#each skills}}
                             {{#if isProfessional}}
                                 <li>
-                                    {{#if ../isAdmin}}
+                                    {{#if ../canEdit}}
                                         <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
                                     {{/if}}
                                     {{ skillName }}
@@ -61,7 +61,7 @@
                             {{#unless isProfessional}}
                                 {{#unless skillDetails}}
                                     <li>
-                                        {{#if ../isAdmin}}
+                                        {{#if ../canEdit}}
                                             <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
                                         {{/if}}
                                         {{ skillName }}
@@ -78,7 +78,7 @@
                             <div class="language">
                                 <p class="language-name">
                                     {{ skillName }}
-                                    {{#if ../isAdmin}}
+                                    {{#if ../canEdit}}
                                         <a href="/skills/delete/{{ skillID }}" class="btn-admin btn-delete">X</a>
                                     {{/if}}
                                 </p>
@@ -88,7 +88,7 @@
                     {{/each}}
                 </div>
             </div>
-            {{#if isAdmin}}
+            {{#if canEdit}}
                 <p>
                     <a href="/skills/create" class="btn-admin btn-create">+ Add New Skill</a>
                 </p>

@@ -44,7 +44,7 @@
                         <p class="experience-name">{{ experienceTitle }} at {{ organizationName }}</p>
                         <p class="experience-date">{{ experienceDate }}</p>
                         <p class="experience-description">{{ experienceDescription }}</p>
-                        {{#if ../isAdmin}}
+                        {{#if ../canEdit}}
                             <p>
                                 <a href="/experience/update/{{ experienceID }}" class="btn-admin btn-update">Change</a>
                                 <a href="/experience/delete/{{ experienceID }}" class="btn-admin btn-delete">Remove</a>
@@ -53,7 +53,7 @@
                     </div>
                 {{/each}}
                 <div class="col-12">
-                    {{#if isAdmin}}
+                    {{#if canEdit}}
                         <p>
                             <a href="/experience/create" class="btn-admin btn-create">+ Add Experience</a>
                         </p>

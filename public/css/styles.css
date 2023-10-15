@@ -63,7 +63,7 @@ body {
 
 .hero{
     min-height: 100vh;
-    background-image: linear-gradient(135deg, #000000, #742c83);
+    background-image: linear-gradient(135deg, #000000, #2c3d83);
 }
 
 .topbar, .menu{
@@ -499,6 +499,10 @@ footer{
     padding: 15px 20px;
     border-radius: 10px;
     border-width: 0;
+}
+
+.section-entry #skillDetails{
+    display: none;
 }
 
 .btn-admin{

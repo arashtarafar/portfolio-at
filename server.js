@@ -430,7 +430,7 @@ app.get("/education", (req, res)=>{
 app.get("/education/delete/:id", (req, res)=>{
     const id = req.params.id;
     if(req.session.isLoggedIn == true && req.session.isAdmin == true){
-        db.all("DELETE FROM educations WHERE educationID=?", [id], (error, educationData)=>{
+        db.all("DELETE FROM educations WHERE educationID=?;", [id], (error, educationData)=>{
             if(error){
                 const model = {
                     dbError: true,
@@ -561,7 +561,7 @@ app.post("/experience/create", (req, res)=>{
             req.body.experienceDescription,
             req.body.organization
         ];
-        db.run("INSERT INTO experiences (experienceTitle, experienceDate, experienceDescription, organizationID) VALUES (?, ?, ?, ?)", newExperience, (error) => {
+        db.run("INSERT INTO experiences (experienceTitle, experienceDate, experienceDescription, organizationID) VALUES (?, ?, ?, ?);", newExperience, (error) => {
             if (error) {
                 console.log("ERROR: ", error);
             } else {
@@ -614,7 +614,7 @@ app.post("/experience/update/:id", (req, res)=>{
             req.body.organization,
             req.params.id
         ];
-        db.run("UPDATE experiences SET experienceTitle=?, experienceDate=?, experienceDescription=?, organizationID=? WHERE experienceID=?", experienceDataBundle, (error) => {
+        db.run("UPDATE experiences SET experienceTitle=?, experienceDate=?, experienceDescription=?, organizationID=? WHERE experienceID=?;", experienceDataBundle, (error) => {
             if (error) {
                 console.log("ERROR: ", error);
             } else {
@@ -660,7 +660,7 @@ app.get("/projects", (req, res)=>{
 app.get("/projects/delete/:id", (req, res)=>{
     const id = req.params.id;
     if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
-        db.all("DELETE FROM projects WHERE projectID=?", [id], (error, projectData)=>{
+        db.all("DELETE FROM projects WHERE projectID=?;", [id], (error, projectData)=>{
             if(error){
                 const model = {
                     dbError: true,
@@ -680,6 +680,94 @@ app.get("/projects/delete/:id", (req, res)=>{
                 }
                 res.redirect("/projects");
             }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/projects/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const model = {
+            isLoggedIn: req.session.isLoggedIn,
+            name: req.session.name,
+            isAdmin: req.session.isAdmin
+        }
+        res.render("projects/create", model);
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/projects/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const newProject = [
+            req.body.projectName,
+            req.body.projectCategory,
+            req.body.projectDescription,
+            req.body.projectThumbnail,
+            req.body.projectURL
+        ];
+        db.run("INSERT INTO projects (projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?);", newProject, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("New project added!");
+            }
+            res.redirect("/projects");
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/projects/update/:id", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        db.all("SELECT * FROM projects WHERE projectID=?;", [req.params.id], (error, projectData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: true,
+                    theError: error,
+                    project: []
+                }
+                res.render("projects/update", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: false,
+                    theError: "",
+                    project: projectData
+                }
+                res.render("projects/update", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/projects/update/:id", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const projectDataBundle = [
+            req.body.projectName,
+            req.body.projectDescription,
+            req.body.projectThumbnail,
+            req.body.projectURL,
+            req.params.id
+        ];
+        db.run("UPDATE projects SET projectName=?, projectDescription=?, projectThumbnail=?, projectURL=? WHERE projectID=?;", projectDataBundle, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("Project modified!");
+            }
+            res.redirect("/projects");
         });
     }else{
         res.redirect("/login");
@@ -719,7 +807,7 @@ app.get("/skills", (req, res)=>{
 app.get("/skills/delete/:id", (req, res)=>{
     const id = req.params.id;
     if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
-        db.all("DELETE FROM skills WHERE skillID=?", [id], (error, skillsData)=>{
+        db.all("DELETE FROM skills WHERE skillID=?;", [id], (error, skillsData)=>{
             if(error){
                 const model = {
                     dbError: true,
@@ -739,6 +827,49 @@ app.get("/skills/delete/:id", (req, res)=>{
                 }
                 res.redirect("/skills");
             }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/skills/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const model = {
+            isLoggedIn: req.session.isLoggedIn,
+            name: req.session.name,
+            isAdmin: req.session.isAdmin
+        }
+        res.render("skills/create", model);
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/skills/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const skillName = req.body.skillName;
+        let isProfessional = "";
+        let skillDetails = "";
+        switch(req.body.skillCategory){
+            case "hard":
+                isProfessional = "yes";
+                break;
+            case "soft":
+                break;
+            case "lang":
+                skillDetails = req.body.skillDetails;
+                break;
+            default:
+                break;
+        }
+        db.run("INSERT INTO skills (skillName, isProfessional, skillDetails) VALUES (?, ?, ?);", [skillName, isProfessional, skillDetails], (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("New skill added!");
+            }
+            res.redirect("/skills");
         });
     }else{
         res.redirect("/login");
@@ -785,7 +916,7 @@ app.post("/login", (req, res)=>{
             }
         });
     } else{
-        db.all("SELECT * FROM users WHERE username=?", [username], (error, userData) => {
+        db.all("SELECT * FROM users WHERE username=?;", [username], (error, userData) => {
             if(error){
                 console.log("Error when reading user from database: ", error);
                 res.redirect("/login");

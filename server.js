@@ -429,7 +429,7 @@ app.get("/education", (req, res)=>{
 });
 app.get("/education/delete/:id", (req, res)=>{
     const id = req.params.id;
-    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
         db.all("DELETE FROM educations WHERE educationID=?;", [id], (error, educationData)=>{
             if(error){
                 const model = {
@@ -452,6 +452,111 @@ app.get("/education/delete/:id", (req, res)=>{
                 }
                 res.redirect("/education");
             }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/education/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        db.all("SELECT * FROM organizations", (error, organizationData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: true,
+                    theError: error,
+                    organizations: []
+                }
+                res.render("education/create", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: false,
+                    theError: "",
+                    organizations: organizationData
+                }
+                res.render("education/create", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/education/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const newEducation = [
+            req.body.educationDegree,
+            req.body.educationDate,
+            req.body.educationDescription,
+            req.body.organizationID
+        ];
+        db.run("INSERT INTO educations (educationDegree, educationDate, educationDescription, organizationID) VALUES (?, ?, ?, ?);", newEducation, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("New education added!");
+            }
+            res.redirect("/education");
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/education/update/:id", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        db.all("SELECT * FROM organizations JOIN educations ON organizations.organizationID=educations.organizationID WHERE educationID=?;", [req.params.id], (error, educationData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: true,
+                    theError: error,
+                    education: []
+                }
+                res.render("education/update", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: false,
+                    theError: "",
+                    education: educationData
+                }
+                res.render("education/update", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/education/update/:id", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const educationDataBundle = [
+            req.body.educationDegree,
+            req.body.educationDate,
+            req.body.educationDescription,
+            req.params.id
+        ];
+        db.run("UPDATE educations SET educationDegree=?, educationDate=?, educationDescription=? WHERE educationID=?;", educationDataBundle, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("Education modified!");
+            }
+            res.redirect("/education");
         });
     }else{
         res.redirect("/login");

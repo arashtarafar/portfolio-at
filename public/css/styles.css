@@ -547,6 +547,38 @@ footer{
     margin-top: 0;
 }
 
+.section-users{
+    background-color: var(--background-color-darker);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-users .headers-users{
+    width: 50%;
+    margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+.section-users .headers-users li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.section-users .users{
+    width: 50%;
+    margin-bottom: 5rem;
+}
+
+.section-users .user{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    opacity: 0.7;
+}
+
 @media only screen and (max-width: 960px){
     .menu{
         margin-right: 3rem;

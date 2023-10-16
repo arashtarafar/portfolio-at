@@ -981,6 +981,114 @@ app.post("/skills/create", (req, res)=>{
     }
 });
 
+//////////////////////////////////////////////////////////////////// USERS PAGE
+app.get("/users", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+
+    db.all("SELECT * FROM users", (error, usersData) => {
+        if(error){
+            const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
+                hasDatabaseError: true,
+                theError: error,
+                users: []
+            }
+            res.render("users", model);
+        } else{
+            const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
+                hasDatabaseError: false,
+                theError: "",
+                users: usersData
+            }
+            res.render("users", model);
+        }
+    });
+});
+app.get("/users/delete/:id", (req, res)=>{
+    const id = req.params.id;
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("DELETE FROM users WHERE userID=?;", [id], (error, usersData)=>{
+            if(error){
+                const model = {
+                    dbError: true,
+                    theError: error,
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/users");
+            }else{
+                const model = {
+                    dbError: false,
+                    theError: "",
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin
+                }
+                res.redirect("/users");
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/users/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        const model = {
+            isLoggedIn: req.session.isLoggedIn,
+            name: req.session.name,
+            isAdmin: req.session.isAdmin
+        }
+        res.render("users/create", model);
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/users/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        const saltRounds = 12;
+        let password;
+
+        bcrypt.hash(req.body.password, saltRounds, (err, hash)=>{
+            password = hash;
+            if(err){
+                console.log("Error hashing password:", err);
+                app.redirect("/users");
+            }else{
+                const newUser = [
+                    req.body.username,
+                    password,
+                    req.body.displayName,
+                    req.body.canEdit
+                ];
+        
+                // console.log(`Received user data is: ${newUser}`);
+        
+                db.run("INSERT INTO users (username, password, displayName, canEdit) VALUES (?, ?, ?, ?);", newUser, (error) => {
+                    if (error) {
+                        console.log("ERROR: ", error);
+                    } else {
+                        console.log("New user added!");
+                    }
+                    res.redirect("/users");
+                });
+            }
+        });
+
+    }else{
+        res.redirect("/login");
+    }
+});
+
 //////////////////////////////////////////////////////////////////// LOGIN PAGES
 app.get("/login", (req, res)=>{
     res.render("login");

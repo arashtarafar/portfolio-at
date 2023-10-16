@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/page.css">
     <script src="js/script.js" defer></script>
 </head>
 <body>
@@ -21,39 +22,34 @@
                     <li class="menu-link"><a href="./projects">Projects</a></li>
                     <li class="menu-link"><a href="./skills">Skills</a></li>
                     <li class="menu-link"><a href="./education">Education</a></li>
-                    {{#if isLoggedIn}}
-                        <li class="menu-link">
-                            <a href="./logout" class="menu-user">Log out {{#unless isAdmin}}({{ name }}){{/unless}}</a>
-                            {{#if isAdmin}}
-                                <span>/ </span>
-                                <a href="./users" class="dashboard">Users</a>
-                            {{/if}}
-                        </li>
-                    {{else}}
-                        <li class="menu-link"><a href="./login" class="menu-user">Log in</a></li>
-                    {{/if}}
-                </ul>                
+                    <li class="menu-link"><a href="./logout">Log out</a></li>
+                </ul>
                 <div class="darkmode-toggle">
                     <i class="bi bi-brightness-high-fill toggle-icon"></i>
                 </div>
-            </nav>
-            <div class="columns">
-                <h1 class="col-8 col-md-12">Hi. I'm Arash, <br>your Media Designer.</h1>
-                <div class="heroright col-4  col-md-12">
-                    <img src="media/img/profile-picture.png" alt="Arash's Portrait" class="portrait">
-                    <div class="herocontacts">
-                        <p class="name">Arash Tarafar</p>
-                        <p class="email">arashtarafar@gmail.com</p>
-                        <p><a href="https://www.linkedin.com/in/arashtarafar/" target="_blank" class="linkedin">linkedin.com/in/arashtarafar</a></p>
-                        <p>TEL: <span class="phone">+46 070 9678 449</span></p>
-                        <p class="address">55612 Jönköping, Sweden</p>
-                    </div>
-                </div>
-            </div>
+            </nav>            
         </div>
     </header>
     <main>
-        {{!-- Nothing here --}}
+        <section class="section-users">
+            <h2>MANAGE USERS</h2>
+            <ul class="headers-users">
+                <li><span>Name</span><span>Username</span><span>Edit Privileges</span><span>Actions</span></li>
+            </ul>
+            <ul class="users">
+                {{#each users}}
+                    <li class="user">
+                        <span>{{ displayName }}</span>
+                        <span>{{ username }}</span>
+                        <span>{{#if canEdit}}✓{{/if}}</span>
+                        <span><a href="/users/delete/{{ userID }}" class="btn-admin btn-update">Remove</a></span>
+                    </li>
+                {{/each}}
+            </ul>
+            <p>
+                <a href="/users/create" class="btn-admin btn-create">+ Add New User</a>
+            </p>
+        </section>
     </main>
     <footer class="container">
         <div class="columns">

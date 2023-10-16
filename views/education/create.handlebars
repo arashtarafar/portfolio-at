@@ -23,9 +23,15 @@
                     <li class="menu-link"><a href="../skills">Skills</a></li>
                     <li class="menu-link"><a href="../education">Education</a></li>
                     {{#if isLoggedIn}}
-                        <li class="menu-link"><a href="../logout">Log out ({{ name }})</a></li>
+                        <li class="menu-link">
+                            <a href="../logout" class="menu-user">Log out {{#unless isAdmin}}({{ name }}){{/unless}}</a>
+                            {{#if isAdmin}}
+                                <span>/ </span>
+                                <a href="../users" class="dashboard">Users</a>
+                            {{/if}}
+                        </li>
                     {{else}}
-                        <li class="menu-link"><a href="../login">Log in</a></li>
+                        <li class="menu-link"><a href="../login" class="menu-user">Log in</a></li>
                     {{/if}}
                 </ul>
                 <div class="darkmode-toggle">

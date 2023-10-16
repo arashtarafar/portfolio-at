@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/page.css">
     <script src="../js/script.js" defer></script>
+    <script src="../js/skill-creation.js" defer></script>
 </head>
 <body>
     <header id="top">
@@ -22,17 +23,7 @@
                     <li class="menu-link"><a href="../projects">Projects</a></li>
                     <li class="menu-link"><a href="../skills">Skills</a></li>
                     <li class="menu-link"><a href="../education">Education</a></li>
-                    {{#if isLoggedIn}}
-                        <li class="menu-link">
-                            <a href="../logout" class="menu-user">Log out {{#unless isAdmin}}({{ name }}){{/unless}}</a>
-                            {{#if isAdmin}}
-                                <span>/ </span>
-                                <a href="../users" class="dashboard">Users</a>
-                            {{/if}}
-                        </li>
-                    {{else}}
-                        <li class="menu-link"><a href="../login" class="menu-user">Log in</a></li>
-                    {{/if}}
+                    <li class="menu-link"><a href="./logout">Log out</a></li>
                 </ul>
                 <div class="darkmode-toggle">
                     <i class="bi bi-brightness-high-fill toggle-icon"></i>
@@ -42,19 +33,17 @@
     </header>
     <main>
         <section class="section-entry">
-            <h2>NEW PROJECT</h2>
+            <h2>NEW USER</h2>
             <form action="./create" method="POST">
-                <input type="text" name="projectName" id="projectName" placeholder="Project Title" required="required">
-                <select name="projectCategory" id="projectCategory">
-                    <option value="" selected="selected">Select a Category</option>
-                    <option value="graphic">Graphic and Design</option>
-                    <option value="web">Web Development</option>
-                    <option value="photography">Photography</option>
-                </select>
-                <textarea name="projectDescription" id="projectDescription" placeholder="Project Description" cols="30" rows="10"></textarea>
-                <input type="text" name="projectThumbnail" id="projectThumbnail" placeholder="Image File Path (Relative)">
-                <input type="text" name="projectURL" id="projectURL" placeholder="Link to the Project">
-                <input type="submit" value="ADD PROJECT">
+                <input type="text" name="displayName" id="displayName" placeholder="Display Name" required="required">
+                <input type="text" name="username" id="username" placeholder="Username" required="required">
+                <input type="text" name="password" id="password" placeholder="Password" required="required">
+                <select name="canEdit" id="canEdit">
+                    <option value="" selected="selected">Choose Privileges</option>
+                    <option value="true">Editor</option>
+                    <option value="">Normal User</option>
+                </select>                
+                <input type="submit" value="CREATE USER">
             </form>
         </section>
     </main>

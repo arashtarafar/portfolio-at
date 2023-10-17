@@ -6,10 +6,10 @@
     <title>My Portfolio: Arash Tarafar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/page.css">
-    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/page.css">
+    <script src="../js/script.js" defer></script>
 </head>
 <body>
     <header id="top">
@@ -17,21 +17,21 @@
             <nav class="topbar">
                 <p class="menu-mobile">MENU</p>
                 <ul class="menu">
-                    <li class="menu-link"><a href="./">About</a></li>
-                    <li class="menu-link"><a href="./experience">Experience</a></li>
-                    <li class="menu-link"><a href="./projects">Projects</a></li>
-                    <li class="menu-link"><a href="./skills">Skills</a></li>
-                    <li class="menu-link"><a href="./education">Education</a></li>
+                    <li class="menu-link"><a href="../">About</a></li>
+                    <li class="menu-link"><a href="../experience">Experience</a></li>
+                    <li class="menu-link"><a href="../projects/1">Projects</a></li>
+                    <li class="menu-link"><a href="../skills">Skills</a></li>
+                    <li class="menu-link"><a href="../education">Education</a></li>
                     {{#if isLoggedIn}}
                         <li class="menu-link">
-                            <a href="./logout" class="menu-user">Log out {{#unless isAdmin}}({{ name }}){{/unless}}</a>
+                            <a href="../logout" class="menu-user">Log out {{#unless isAdmin}}({{ name }}){{/unless}}</a>
                             {{#if isAdmin}}
                                 <span>/ </span>
-                                <a href="./users" class="dashboard">Users</a>
+                                <a href="../users" class="dashboard">Users</a>
                             {{/if}}
                         </li>
                     {{else}}
-                        <li class="menu-link"><a href="./login" class="menu-user">Log in</a></li>
+                        <li class="menu-link"><a href="../login" class="menu-user">Log in</a></li>
                     {{/if}}
                 </ul>
                 <div class="darkmode-toggle">
@@ -46,10 +46,21 @@
             <h2>MY PROJECTS</h2>
             <a class="anchor" id="graphics"></a>
             <div class="project-field">
+                <div class="paginationContainer">
+                    <ul class="pagination">
+                        <li class="paginationElement"><a href="/projects/1" class="paginationLink">First</a></li>
+                        <li class="paginationElement"><a href="/projects/{{ prevPage }}" class="paginationLink">Previous</a></li>
+                        {{#each pages}}
+                            <li class="paginationElement"><a href="/projects/{{ number }}" class="paginationLink">{{ number }}</a></li>
+                        {{/each}}
+                        <li class="paginationElement"><a href="/projects/{{ nextPage }}" class="paginationLink">Next</a></li>
+                        <li class="paginationElement"><a href="/projects/{{ lastPage }}" class="paginationLink">Last</a></li>
+                    </ul>
+                </div>
                 <div class="columns">
                     {{#each projects}}
                         <div class="project col-4 col-sm-12 col-lg-6 col-md-12">
-                            <img src="{{ projectThumbnail }}" alt="Project Thumbnail" class="project-thumbnail">
+                            <img src="../{{ projectThumbnail }}" alt="Project Thumbnail" class="project-thumbnail">
                             <p class="project-name">{{ projectName }}</p>                            
                             <a href="{{ projectURL }}" class="project-link" target="_blank">{{#if projectURL}}Take a Look{{/if}}</a>
                             <p class="project-description">{{ projectDescription }}</p>
@@ -66,6 +77,17 @@
                             <a href="/projects/create" class="btn-admin btn-create">+ Add a Project</a>
                         </div>
                     {{/if}}
+                </div>
+                <div class="paginationContainer">
+                    <ul class="pagination">
+                        <li class="paginationElement"><a href="/projects/1" class="paginationLink">First</a></li>
+                        <li class="paginationElement"><a href="/projects/{{ prevPage }}" class="paginationLink">Previous</a></li>
+                        {{#each pages}}
+                            <li class="paginationElement"><a href="/projects/{{ number }}" class="paginationLink">{{ number }}</a></li>
+                        {{/each}}
+                        <li class="paginationElement"><a href="/projects/{{ nextPage }}" class="paginationLink">Next</a></li>
+                        <li class="paginationElement"><a href="/projects/{{ lastPage }}" class="paginationLink">Last</a></li>
+                    </ul>
                 </div>
             </div>
         </section>

@@ -733,10 +733,30 @@ app.post("/experience/update/:id", (req, res)=>{
 });
 
 //////////////////////////////////////////////////////////////////// PROJECTS PAGE
-app.get("/projects", (req, res)=>{
-    // console.log("SESSION: ", req.session);
+app.get("/projects/:page", (req, res)=>{
+    // console.log("SESSION: ", req.session);'
+    const currentPageNumber = parseInt(req.params.page);
+    let numberOfPages = 0;
+    const numberOfProjectsToShowPerPage = 6;
+    let pagesArray = [];
+    let previousPageNumber = currentPageNumber > 1 ? currentPageNumber - 1 : 1;
+    let nextPageNumber = 1;
 
-    db.all("SELECT * FROM projects", (error, projectsData) => {
+    db.all(`SELECT COUNT(*) as 'count' FROM projects`, (err, rows) => {
+        if (err) {
+            console.log("Error counting the projects:", err);
+        } else {
+            numberOfPages = Math.ceil(rows[0].count/numberOfProjectsToShowPerPage);
+            for(let i = 1; i <= numberOfPages; i++){
+                pagesArray.push({
+                    number: i
+                });
+            }
+            nextPageNumber = currentPageNumber < numberOfPages ? currentPageNumber + 1 : numberOfPages;
+        }
+    });
+
+    db.all("SELECT * FROM projects LIMIT ? OFFSET ?", [numberOfProjectsToShowPerPage, (currentPageNumber - 1) * numberOfProjectsToShowPerPage], (error, projectsData) => {
         if(error){
             const model = {
                 isLoggedIn: req.session.isLoggedIn,
@@ -745,7 +765,12 @@ app.get("/projects", (req, res)=>{
                 canEdit: req.session.canEdit,
                 hasDatabaseError: true,
                 theError: error,
-                projects: []
+                projects: [],
+                currentPage: req.params.page,
+                pages: pagesArray,
+                prevPage: previousPageNumber,
+                nextPage: nextPageNumber,
+                lastPage: pagesArray.length
             }
             res.render("projects", model);
         } else{
@@ -756,7 +781,12 @@ app.get("/projects", (req, res)=>{
                 canEdit: req.session.canEdit,
                 hasDatabaseError: false,
                 theError: "",
-                projects: projectsData
+                projects: projectsData,
+                currentPage: req.params.page,
+                pages: pagesArray,
+                prevPage: previousPageNumber,
+                nextPage: nextPageNumber,
+                lastPage: pagesArray.length
             }
             res.render("projects", model);
         }

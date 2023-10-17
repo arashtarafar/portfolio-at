@@ -579,6 +579,31 @@ footer{
     opacity: 0.7;
 }
 
+.paginationContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5rem;
+    opacity: 0.7;
+}
+
+.pagination li{
+    margin: 0 2rem;
+}
+
+.paginationLink:link,
+.paginationLink:visited{
+    font-family: 'Oxygen', sans-serif;
+    color: var(--link-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.paginationLink:hover,
+.paginationLink:active{
+    color: var(--link-color-hover);
+}
+
 @media only screen and (max-width: 960px){
     .menu{
         margin-right: 3rem;

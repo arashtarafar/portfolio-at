@@ -733,6 +733,41 @@ app.post("/experience/update/:id", (req, res)=>{
 });
 
 //////////////////////////////////////////////////////////////////// PROJECTS PAGE
+app.get("/projects/create", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const model = {
+            isLoggedIn: req.session.isLoggedIn,
+            name: req.session.name,
+            isAdmin: req.session.isAdmin
+        }
+        res.render("projects/create", model);
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/projects/create", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
+        const newProject = [
+            req.body.projectName,
+            req.body.projectCategory,
+            req.body.projectDescription,
+            req.body.projectThumbnail,
+            req.body.projectURL
+        ];
+        db.run("INSERT INTO projects (projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?);", newProject, (error) => {
+            if (error) {
+                console.log("ERROR: ", error);
+            } else {
+                console.log("New project added!");
+            }
+            res.redirect("/projects/1");
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
 app.get("/projects/:page", (req, res)=>{
     // console.log("SESSION: ", req.session);'
     const currentPageNumber = parseInt(req.params.page);
@@ -820,41 +855,6 @@ app.get("/projects/delete/:id", (req, res)=>{
         res.redirect("/login");
     }
 });
-app.get("/projects/create", (req, res)=>{
-    // console.log("SESSION: ", req.session);
-
-    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
-        const model = {
-            isLoggedIn: req.session.isLoggedIn,
-            name: req.session.name,
-            isAdmin: req.session.isAdmin
-        }
-        res.render("projects/create", model);
-    }else{
-        res.redirect("/login");
-    }
-});
-app.post("/projects/create", (req, res)=>{
-    if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
-        const newProject = [
-            req.body.projectName,
-            req.body.projectCategory,
-            req.body.projectDescription,
-            req.body.projectThumbnail,
-            req.body.projectURL
-        ];
-        db.run("INSERT INTO projects (projectName, projectCategory, projectDescription, projectThumbnail, projectURL) VALUES (?, ?, ?, ?, ?);", newProject, (error) => {
-            if (error) {
-                console.log("ERROR: ", error);
-            } else {
-                console.log("New project added!");
-            }
-            res.redirect("/projects");
-        });
-    }else{
-        res.redirect("/login");
-    }
-});
 app.get("/projects/update/:id", (req, res)=>{
     // console.log("SESSION: ", req.session);
     if(req.session.isLoggedIn == true && req.session.canEdit == "true"){
@@ -902,11 +902,42 @@ app.post("/projects/update/:id", (req, res)=>{
             } else {
                 console.log("Project modified!");
             }
-            res.redirect("/projects");
+            res.redirect("/projects/1");
         });
     }else{
         res.redirect("/login");
     }
+});
+
+//////////////////////////////////////////////////////////////////// SINGLE PROJECT PAGE
+app.get("/project/:id", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+
+    db.all("SELECT * FROM projects WHERE projectID=?", [req.params.id], (error, projectData) => {
+        if(error){
+            const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
+                hasDatabaseError: true,
+                theError: error,
+                project: []
+            }
+            res.render("project", model);
+        } else{
+            const model = {
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
+                canEdit: req.session.canEdit,
+                hasDatabaseError: false,
+                theError: "",
+                project: projectData
+            }
+            res.render("project", model);
+        }
+    });
 });
 
 //////////////////////////////////////////////////////////////////// SKILLS PAGE
@@ -1114,6 +1145,69 @@ app.post("/users/create", (req, res)=>{
             }
         });
 
+    }else{
+        res.redirect("/login");
+    }
+});
+app.get("/users/update/:id", (req, res)=>{
+    // console.log("SESSION: ", req.session);
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        db.all("SELECT * FROM users WHERE userID=?;", [req.params.id], (error, userData) => {
+            if(error){
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: true,
+                    theError: error,
+                    user: []
+                }
+                res.render("users/update", model);
+            } else{
+                const model = {
+                    isLoggedIn: req.session.isLoggedIn,
+                    name: req.session.name,
+                    isAdmin: req.session.isAdmin,
+                    canEdit: req.session.canEdit,
+                    hasDatabaseError: false,
+                    theError: "",
+                    user: userData
+                }
+                res.render("users/update", model);
+            }
+        });
+    }else{
+        res.redirect("/login");
+    }
+});
+app.post("/users/update/:id", (req, res)=>{
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+        const saltRounds = 12;
+        let password;
+
+        bcrypt.hash(req.body.password, saltRounds, (err, hash)=>{
+            password = hash;
+            if(err){
+                console.log("Error hashing password:", err);
+                app.redirect("/users");
+            }else{
+                const userDataBundle = [
+                    req.body.displayName,
+                    password,
+                    req.body.canEdit,
+                    req.params.id
+                ];
+                db.run("UPDATE users SET displayName=?, password=?, canEdit=? WHERE userID=?;", userDataBundle, (error) => {
+                    if (error) {
+                        console.log("ERROR: ", error);
+                    } else {
+                        console.log("User modified!");
+                    }
+                    res.redirect("/users");
+                });
+            }
+        });        
     }else{
         res.redirect("/login");
     }

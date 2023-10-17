@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio: Arash Tarafar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/page.css">
+    <script src="../../js/script.js" defer></script>
+    <script src="../../js/skill-creation.js" defer></script>
+</head>
+<body>
+    <header id="top">
+        <div class="hero container" id="about">
+            <nav class="topbar">
+                <p class="menu-mobile">MENU</p>
+                <ul class="menu">
+                    <li class="menu-link"><a href="../../">About</a></li>
+                    <li class="menu-link"><a href="../../experience">Experience</a></li>
+                    <li class="menu-link"><a href="../../projects/1">Projects</a></li>
+                    <li class="menu-link"><a href="../../skills">Skills</a></li>
+                    <li class="menu-link"><a href="../../education">Education</a></li>
+                    <li class="menu-link"><a href="../../logout">Log out</a></li>
+                </ul>
+                <div class="darkmode-toggle">
+                    <i class="bi bi-brightness-high-fill toggle-icon"></i>
+                </div>
+            </nav>            
+        </div>
+    </header>
+    <main>
+        <section class="section-entry">
+            <h2>MODIFY USER</h2>
+            {{#each user}}
+                <form action="./{{ userID }}" method="POST">
+                    <input type="text" name="displayName" id="displayName" value="{{ displayName }}" placeholder="Display Name" required="required">
+                    <input type="text" name="password" id="password" placeholder="New Password" required="required">
+                    <select name="canEdit" id="canEdit">
+                        <option value="true" {{#if canEdit}}selected="selected"{{/if}}>Editor</option>
+                        <option value="" {{#unless canEdit}}selected="selected"{{/unless}}>Normal User</option>
+                    </select>                
+                    <input type="submit" value="SAVE USER">
+                </form>
+            {{/each}}
+        </section>
+    </main>
+    <footer class="container">
+        <div class="columns">
+            <div class="contacts col-12">
+                <span class="prompt">CONTACT ME:</span> <span class="phone">+46 070 9678 449</span> <span class="email">arashtarafar@gmail.com</span> <a href="https://www.linkedin.com/in/arashtarafar/" target="_blank" class="linkedin">linkedin.com/in/arashtarafar</a>
+            </div>
+            <a class="backtotop" href="#top">↑</a>
+        </div>
+        <p class="copyright">All Rights Reserved. Arash Tarafar, 2023</p>
+    </footer>
+</body>
+</html>

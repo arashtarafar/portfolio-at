@@ -42,7 +42,7 @@
                         <span>{{ displayName }}</span>
                         <span>{{ username }}</span>
                         <span>{{#if canEdit}}✓{{/if}}</span>
-                        <span><a href="/users/delete/{{ userID }}" class="btn-admin btn-update">Remove</a></span>
+                        <span><a href="/users/delete/{{ userID }}" class="btn-admin btn-update">Remove</a> <a href="/users/update/{{ userID }}" class="btn-admin btn-update">Modify</a></span>
                     </li>
                 {{/each}}
             </ul>

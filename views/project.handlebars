@@ -43,51 +43,28 @@
     <main>
         <a class="anchor" id="projects"></a>
         <section class="container section-projects">
-            <h2>MY PROJECTS</h2>
-            <a class="anchor" id="graphics"></a>
             <div class="project-field">
-                <div class="paginationContainer">
-                    <ul class="pagination">
-                        <li class="paginationElement"><a href="/projects/1" class="paginationLink">First</a></li>
-                        <li class="paginationElement"><a href="/projects/{{ prevPage }}" class="paginationLink">Previous</a></li>
-                        {{#each pages}}
-                            <li class="paginationElement"><a href="/projects/{{ number }}" class="paginationLink">{{ number }}</a></li>
-                        {{/each}}
-                        <li class="paginationElement"><a href="/projects/{{ nextPage }}" class="paginationLink">Next</a></li>
-                        <li class="paginationElement"><a href="/projects/{{ lastPage }}" class="paginationLink">Last</a></li>
-                    </ul>
-                </div>
-                <div class="columns">
-                    {{#each projects}}
+                <div class="columns">                    
+                    {{#each project}}
                         <div class="project col-4 col-sm-12 col-lg-6 col-md-12">
                             <img src="../{{ projectThumbnail }}" alt="Project Thumbnail" class="project-thumbnail">
+                        </div>
+                        <div class="project col-4 col-sm-12 col-lg-6 col-md-12">
                             <p class="project-name">{{ projectName }}</p>                            
-                            <a href="/project/{{ projectID }}" class="project-link">Project Page</a>
-                            <p class="project-description">{{ projectDescription }}</p>
-                            {{#if ../canEdit}}
+                            <br>
+                            <p class="project-description">{{ projectDescription }}</p>                            
                                 <p class="links">
-                                    <a href="/projects/update/{{ projectID }}" class="btn-admin btn-update">Change</a>
-                                    <a href="/projects/delete/{{ projectID }}" class="btn-admin btn-delete">Remove</a>
-                                </p>
-                            {{/if}}
+                                    <a href="{{ projectURL }}" class="btn-admin btn-update" target="_blank">{{#if projectURL}}Take a Look{{/if}}</a>
+                                    {{#if ../canEdit}}
+                                        <a href="/projects/update/{{ projectID }}" class="btn-admin btn-update">Change</a>
+                                        <a href="/projects/delete/{{ projectID }}" class="btn-admin btn-delete">Remove</a>
+                                    {{/if}}
+                                </p>                           
                         </div>
                     {{/each}}
-                    {{#if canEdit}}
-                        <div class="new-project col-4 col-sm-12 col-lg-6 col-md-12">
-                            <a href="/projects/create" class="btn-admin btn-create">+ Add a Project</a>
-                        </div>
-                    {{/if}}
-                </div>
-                <div class="paginationContainer">
-                    <ul class="pagination">
-                        <li class="paginationElement"><a href="/projects/1" class="paginationLink">First</a></li>
-                        <li class="paginationElement"><a href="/projects/{{ prevPage }}" class="paginationLink">Previous</a></li>
-                        {{#each pages}}
-                            <li class="paginationElement"><a href="/projects/{{ number }}" class="paginationLink">{{ number }}</a></li>
-                        {{/each}}
-                        <li class="paginationElement"><a href="/projects/{{ nextPage }}" class="paginationLink">Next</a></li>
-                        <li class="paginationElement"><a href="/projects/{{ lastPage }}" class="paginationLink">Last</a></li>
-                    </ul>
+                    <div class="new-project col-4 col-sm-12 col-lg-6 col-md-12">
+                        <a href="/projects/1" class="btn-admin btn-create">← Back to Projects</a>
+                    </div>
                 </div>
             </div>
         </section>

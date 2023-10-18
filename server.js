@@ -27,7 +27,7 @@ db.run("CREATE TABLE users (userID INTEGER PRIMARY KEY, username TEXT NOT NULL, 
                 "username":"arashtarafar",
                 "password":"$2b$12$yEXI.hG2rfDseTAawMuc8OGybTPfwLhFqFcrUNl3OnFjop/n7x.Vi", // ^r^shn3V3rL0s3s
                 "display":"Arash", 
-                "edit":"true"
+                "edit":""
             },
             { 
                 "username":"jerland",
@@ -82,6 +82,31 @@ db.run("CREATE TABLE organizations (organizationID INTEGER PRIMARY KEY, organiza
                 "id":"5",
                 "name":"Snartup", 
                 "educational":"",
+            },
+            {   
+                "id":"6",
+                "name":"Michigan State University", 
+                "educational":"true",
+            },
+            {   
+                "id":"7",
+                "name":"University of Michigan", 
+                "educational":"true",
+            },
+            {   
+                "id":"8",
+                "name":"Gaming with Arash", 
+                "educational":"",
+            },
+            {   
+                "id":"9",
+                "name":"Udemy", 
+                "educational":"true",
+            },
+            {   
+                "id":"10",
+                "name":"Coursera", 
+                "educational":"true",
             },
         ]
         // inserts organizations
@@ -143,6 +168,12 @@ db.run("CREATE TABLE experiences (experienceID INTEGER PRIMARY KEY, experienceTi
                 "description":"",
                 "orgID":"4",
             },
+            { 
+                "title":"Professional Gaming Streamer",
+                "date":"July 2020",
+                "description":"I streamed a variety of online games, helped develop web apps for national streaming platforms, and learned a great deal about marketing, video production, recording software, and more.",
+                "orgID":"8",
+            },
         ]
         // inserts experiences
         experiences.forEach( (oneExperience) => {
@@ -179,6 +210,24 @@ db.run("CREATE TABLE educations (educationID INTEGER PRIMARY KEY, educationDegre
                 "description":"Here, I learned most of what I know about computers, programming, and logical thinking.",
                 "orgID":"1",
             },
+            { 
+                "degree":"Certificate of Completion: Photography Essentials",
+                "date":"June 2022",
+                "description":"I learned most of what I know about practical photography here, which made it possible to have a fulfilling hobby, and a potential future career.",
+                "orgID":"9",
+            },
+            { 
+                "degree":"Official Certificate: Python Programmer",
+                "date":"June 2013",
+                "description":"I was introduced to the Python scripting language, and an entirely new way of thinking about programming.",
+                "orgID":"7",
+            },
+            { 
+                "degree":"Certificate of Completion: Meta Front-end Developer",
+                "date":"June 2013",
+                "description":"Under the supervision and care of the amazing instructors at Meta, I developed a deeper understanding of web development technologies, and learned state-of-the-art development techniques.",
+                "orgID":"10",
+            },
         ]
         // inserts educations
         educations.forEach( (oneEducation) => {
@@ -205,58 +254,65 @@ db.run("CREATE TABLE projects (projectID INTEGER PRIMARY KEY, projectName TEXT N
         const projects = [
             { 
                 "name":"Visual Identity Guidelines: Lush", 
-                "category":"graphic", 
+                "category":"Graphic Design", 
                 "description": "In this course project, I made a visual identity guideline document for Lush, an imaginary beauty products company.",
                 "thumbnail":"media/img/project-graphic-1.png",
                 "url":"https://drive.google.com/file/d/1HSc1aVq66CP2O-rnDndd8XUr-xDYVkRF/view?usp=sharing"
             },
             { 
                 "name":"Printed Magazine: Plants and Gardening", 
-                "category":"graphic", 
+                "category":"Graphic Design", 
                 "description": "This collaborative course project, put my skills in creating layouts and graphics in Illustrator and InDesign, as well as photo editing in Lightroom, to the test.",
                 "thumbnail":"media/img/project-graphic-2.png",
                 "url":"https://drive.google.com/file/d/10018Q1Kq_sbB5-MQRdFVSJzbv_7rE6VA/view?usp=sharing"
             },
             { 
                 "name":"Logo Concepts: JUPS", 
-                "category":"graphic", 
+                "category":"Graphic Design", 
                 "description": "To start off my work in the Jönköping University public speaking association, I proposed logo concepts to the board. The final logo is going to represent the association in the real world, on our website, and in social media.",
                 "thumbnail":"media/img/project-graphic-3.png",
                 "url":""
             },
             { 
                 "name":"Space Game: Javascript Game", 
-                "category":"web", 
+                "category":"Web Development", 
                 "description": "A simple javascript space game with minimalistic design, similar to the famous Lunar Lander game.",
                 "thumbnail":"media/img/project-web-1.png",
                 "url":"https://ju-nmd2022.github.io/fop-lunar-lander-arashtarafar/"
             },
             { 
                 "name":"No Monkey Business: Javascript Game", 
-                "category":"web", 
+                "category":"Web Development", 
                 "description": "This game was designed to be simple, annoying, and addictive. A lesson in effectiveness learned from games like Flappy Bird and Skippy Squirrel.",
                 "thumbnail":"media/img/project-web-2.png",
                 "url":"https://ju-nmd2022.github.io/fop-final-project-project-34/"
             },
             { 
                 "name":"The Wandering: Javascript Game", 
-                "category":"web", 
+                "category":"Web Development", 
                 "description": "This RPG-style game has elements of lore that are reminiscent of the Dark Souls and Elden Ring universe.",
                 "thumbnail":"media/img/project-web-3.png",
                 "url":"https://ju-nmd2022.github.io/wuid-adventure-game-arashtarafar/"
             },
             { 
                 "name":"Lifestyle Shoot: Fairwell Pubcrawl 2023", 
-                "category":"photography", 
+                "category":"Photography", 
                 "description": "Accompanying the groups in our university's fairwell pub event in the summer of 2023, I captured the memories and heat of the drinking and social games.",
                 "thumbnail":"media/img/project-photography-1.png",
                 "url":""
             },
             { 
                 "name":"Portrait Shoot: Social Media", 
-                "category":"photography", 
+                "category":"Photography", 
                 "description": "This unpaid photography and editing job, put my skills to the test, and supplied my client with an array of photos to showcase on their instagram and Tinder accounts.",
                 "thumbnail":"media/img/project-photography-2.png",
+                "url":""
+            },
+            { 
+                "name":"Wireless Laboratory Scale", 
+                "category":"Internet of Things", 
+                "description": "I designed and produced a precise and cost-effective laboratory scale for my university's civil engineering department. I created and 3D-printed the components, designed and assembled the hardware and circuitry, wrote the firmware, designed and implemented the user interface, and developed cerntralized servers and applications for the Windows operating system. I used the C++ programming language, in the Qt intergrated development environment.",
+                "thumbnail":"media/img/project-iot-1.jpg",
                 "url":""
             },
         ]
@@ -772,7 +828,7 @@ app.get("/projects/:page", (req, res)=>{
     // console.log("SESSION: ", req.session);'
     const currentPageNumber = parseInt(req.params.page);
     let numberOfPages = 0;
-    const numberOfProjectsToShowPerPage = 6;
+    const numberOfProjectsToShowPerPage = 3;
     let pagesArray = [];
     let previousPageNumber = currentPageNumber > 1 ? currentPageNumber - 1 : 1;
     let nextPageNumber = 1;

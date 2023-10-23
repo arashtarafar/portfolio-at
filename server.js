@@ -1348,10 +1348,7 @@ app.post("/login", (req, res)=>{
 app.get("/logout", (req, res)=>{
     console.log("Successfully logged out of " + req.session.name + ".");
 
-    req.session.isAdmin = false;
-    req.session.canEdit = "";
-    req.session.isLoggedIn = false;
-    req.session.name = "";
+    req.session.destroy();
     res.redirect("/");
 });
 

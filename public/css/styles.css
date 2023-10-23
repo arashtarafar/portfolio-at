@@ -88,6 +88,7 @@ body {
     right: 0;
     padding: 32px 0;
     box-shadow: 1px 0 15px #121212;
+    z-index: 999;
 }
 
 .darkmode-toggle{
@@ -107,7 +108,8 @@ body {
 }
 
 .menu.collapsed{
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 
 .menu-link{
@@ -603,13 +605,14 @@ footer{
 .paginationLink:active{
     color: var(--link-color-hover);
 }
-
+@media only screen and (max-width: 1280px){
+    .menu-link{
+        margin-left: 3rem;
+    }
+}
 @media only screen and (max-width: 960px){
     .menu{
         margin-right: 3rem;
-    }
-    .menu-link{
-        margin-left: 3rem;
     }
     .service p{
         width: 100%;
@@ -624,6 +627,9 @@ footer{
     }
 }
 @media only screen and (max-width: 840px){
+    .menu-link{
+        margin-left: 2rem;
+    }
     .service p{
         width: 90%;
     }
@@ -690,5 +696,21 @@ footer{
         display: block;
         text-align: center;
         margin-bottom: 1.5rem;
+    }
+    .pagination li{
+        margin: 0 0.5rem;
+    }
+    .headers-users{
+        display: none;
+    }
+    .section-users .user{
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    .section-users .user span{
+        display: inline-block;
+        margin-bottom: 1rem;
     }
 }
